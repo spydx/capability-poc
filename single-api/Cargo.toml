@@ -1,0 +1,13 @@
+[package]
+name = "single_api"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+capabilities = { git = "https://github.com/spydx/capabilities" }
+sqlx = { version = "0.5.10", features = ["migrate","runtime-actix-rustls","offline","macros", "sqlite", "postgres", "chrono"] }
+async-trait = "0.1.52"
+tokio = { version = "1.15.0", features = ["full"] }
+chrono = "0.4.19"
