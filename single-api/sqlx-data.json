@@ -1,0 +1,33 @@
+{
+  "db": "SQLite",
+  "6d5784747bc5f3e1f7ca4794c19c151feff8e343d44dd868aee2a822e2b05dc8": {
+    "query": "INSERT INTO bowls (name) VALUES ($1)",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Right": 1
+      },
+      "nullable": []
+    }
+  },
+  "cf36e16c461f11f5766021da72a5a37d915abfc97f0be8869558d8d141cabb8a": {
+    "query": "DELETE FROM bowls WHERE id = $1",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Right": 1
+      },
+      "nullable": []
+    }
+  },
+  "e850fbd67b69507841f4e791b075b17735bccecce1e8362fc3efd85ceef76c56": {
+    "query": "DELETE FROM bowls WHERE name = $1",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Right": 1
+      },
+      "nullable": []
+    }
+  }
+}

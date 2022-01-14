@@ -1,6 +1,17 @@
 use capabilities::capability;
-use single_api::model::BowlWaterlevel;
+use crate::model::BowlWaterlevel;
 use async_trait::async_trait;
+
+use crate::model::CapCreateBowlWaterlevel;
+use crate::model::CapReadBowlWaterlevel;
+use crate::model::CapReadBowlWaterlevelId;
+use crate::model::CapDeleteBowlWaterlevel;
+use crate::model::CapDeleteBowlWaterlevelId;
+use crate::model::CapReadAllBowlWaterlevel;
+
+
+#[allow(unused_imports)] //Update / UpdateAll
+use capabilities::{Create, Read, ReadAll, Update, UpdateAll, Delete};
 
 #[capability(Create, BowlWaterlevel)]
 pub fn create_waterbowl(bowl: BowlWaterlevel) -> Result<BowlWaterlevel, CapServiceError> {
