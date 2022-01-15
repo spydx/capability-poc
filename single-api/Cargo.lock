@@ -173,9 +173,9 @@ dependencies = [
 
 [[package]]
 name = "actix-router"
-version = "0.5.0-beta.4"
+version = "0.5.0-rc.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b53c1deabdbf3a8a8b9a949123edd3cafb873abd75da96b5933a8b590f9d6dc2"
+checksum = "4bdca166b1041184e2108ef05bd9909ec18cc6abc41152d31d30224cebfaac75"
 dependencies = [
  "bytestring",
  "firestorm",
@@ -382,14 +382,14 @@ dependencies = [
 
 [[package]]
 name = "actix-web"
-version = "4.0.0-beta.19"
+version = "4.0.0-beta.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "229d0d2c11d6c734327cf1fbc15dd644b351b440bcb4608349258f5e00605bdc"
+checksum = "aa8ba5081e9f8d0016cf34df516c699198158fd8c77990aa284115b055ead61b"
 dependencies = [
  "actix-codec 0.4.2",
  "actix-http 3.0.0-beta.18",
  "actix-macros 0.2.3",
- "actix-router 0.5.0-beta.4",
+ "actix-router 0.5.0-rc.1",
  "actix-rt 2.6.0",
  "actix-server 2.0.0-rc.4",
  "actix-service 2.0.2",
@@ -436,7 +436,7 @@ version = "0.5.0-rc.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "98a793e4a7bd059e06e1bc1bd9943b57a47f806de3599d2437441682292c333e"
 dependencies = [
- "actix-router 0.5.0-beta.4",
+ "actix-router 0.5.0-rc.1",
  "proc-macro2",
  "quote",
  "syn",
@@ -461,7 +461,7 @@ checksum = "95ff332baee0f5ce55d94c690acb33a390d04a458d4bbd40a593cf847ac74ba4"
 dependencies = [
  "actix-service 2.0.2",
  "actix-utils 3.0.0",
- "actix-web 4.0.0-beta.19",
+ "actix-web 4.0.0-beta.20",
  "base64",
  "futures-core",
  "futures-util",
@@ -647,7 +647,6 @@ dependencies = [
 [[package]]
 name = "capabilities"
 version = "0.1.0"
-source = "git+https://github.com/spydx/capabilities#898630f8fd30b0cc1b91388774d0719d82ddb800"
 dependencies = [
  "actix-web 3.3.3",
  "actix-web-httpauth 0.5.1",
@@ -663,7 +662,6 @@ dependencies = [
 [[package]]
 name = "capabilities-derive"
 version = "0.1.0"
-source = "git+https://github.com/spydx/capabilities#898630f8fd30b0cc1b91388774d0719d82ddb800"
 dependencies = [
  "async-trait",
  "darling",
@@ -2385,7 +2383,7 @@ name = "single_api"
 version = "0.1.0"
 dependencies = [
  "actix-http 3.0.0-beta.18",
- "actix-web 4.0.0-beta.19",
+ "actix-web 4.0.0-beta.20",
  "actix-web-httpauth 0.6.0-beta.7",
  "async-trait",
  "capabilities",

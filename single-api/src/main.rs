@@ -9,6 +9,8 @@ use actix_web::{App, HttpServer, HttpResponse,  Responder};
 use actix_web::web::{self};
 #[allow(unused_imports)]
 use actix_web_httpauth::middleware::HttpAuthentication;
+#[allow(unused_imports)]
+use capabilities::{Create, Delete, Update, Read, ReadAll, DeleteAll, UpdateAll};
 
 #[service(SqliteDb, name = "db")]
 #[tokio::main]
@@ -98,7 +100,8 @@ pub fn delete_bowl_by_id(bowl_id: i64) -> Result<Bowls, CapServiceError> {
 
     Ok(Bowls { id: bowl_id, name: "DELETED".to_string()})
 }
-/* 
+
+use chrono::NaiveDateTime;
 #[capabilities(Create, Read, Delete, ReadAll, id = "id")]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct BowlWaterlevel {
@@ -107,7 +110,6 @@ pub struct BowlWaterlevel {
     date: NaiveDateTime,
     waterlevel: i64,
 }
-
 
 #[capability(Create, BowlWaterlevel)]
 pub fn create_waterbowl(bowl: BowlWaterlevel) -> Result<BowlWaterlevel, CapServiceError> {
@@ -123,7 +125,7 @@ pub fn create_waterbowl(bowl: BowlWaterlevel) -> Result<BowlWaterlevel, CapServi
 }
 
 #[capability(Read, BowlWaterlevel, id = "i64")]
-pub fn get_by_id(bowl_id: i64) -> Result<BowlWaterlevel, CapServiceError> {
+pub fn get_waterlevel_by_id(bowl_id: i64) -> Result<BowlWaterlevel, CapServiceError> {
     let bowl = sqlx::query_as!(
         BowlWaterlevel,
         r#"SELECT * FROM bowls WHERE id = $1"#,
@@ -136,7 +138,7 @@ pub fn get_by_id(bowl_id: i64) -> Result<BowlWaterlevel, CapServiceError> {
 }
 
 #[capability(Read, BowlWaterlevel)]
-pub fn get(bowl: BowlWaterlevel) -> Result<BowlWaterlevel, CapServiceError> {
+pub fn get_waterlevel(bowl: BowlWaterlevel) -> Result<BowlWaterlevel, CapServiceError> {
     let bowl = sqlx::query_as!(
         BowlWaterlevel,
         r#"SELECT * FROM bowls WHERE id = $1"#,
@@ -149,7 +151,7 @@ pub fn get(bowl: BowlWaterlevel) -> Result<BowlWaterlevel, CapServiceError> {
 }
 
 #[capability(ReadAll, BowlWaterlevel)]
-pub fn get_all() -> Result<Vec<BowlWaterlevel>, CapServiceError> {
+pub fn get_all_waterlevels() -> Result<Vec<BowlWaterlevel>, CapServiceError> {
     let bowls: Vec<BowlWaterlevel> = sqlx::query_as!(BowlWaterlevel, r#"SELECT * FROM bowls"#)
         .fetch_all(&self.db)
         .await
@@ -160,7 +162,7 @@ pub fn get_all() -> Result<Vec<BowlWaterlevel>, CapServiceError> {
 
 
 #[capability(Delete, BowlWaterlevel, id = "i64")]
-pub fn delete_bowl_by_id(bowl_id: i64) -> Result<(), CapServiceError> {
+pub fn delete_waterlevel_by_id(bowl_id: i64) -> Result<(), CapServiceError> {
     let b = sqlx::query_as!(BowlWaterlevel,r#"SELECT * FROM bowls WHERE id = $1"#,
         bowl_id)
         .fetch_one(&self.db)
@@ -177,11 +179,11 @@ pub fn delete_bowl_by_id(bowl_id: i64) -> Result<(), CapServiceError> {
 
 
 #[capability(Delete, BowlWaterlevel)]
-pub fn delete_bowl(bowl: BowlWaterlevel) -> Result<BowlWaterlevel, CapServiceError> {
+pub fn delete_waterlevel(bowl: BowlWaterlevel) -> Result<BowlWaterlevel, CapServiceError> {
     let _res = sqlx::query!(r#"DELETE FROM bowls WHERE id = $1"#,
             bowl.id)
         .execute(&self.db)
         .await
         .expect("Failed to delete");
     Ok(BowlWaterlevel { id: bowl.id, date: bowl.date , waterlevel: bowl.waterlevel })
-}*/
+}

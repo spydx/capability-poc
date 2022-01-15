@@ -4,9 +4,8 @@ CREATE TABLE bowls (
     name TEXT not null
 );
 
-
 CREATE TABLE waterlevels (
     date DATETIME PRIMARY KEY,
-    id integer 
+    id integer not null,
     waterlevel integer not null
 );
