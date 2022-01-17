@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 # capabilities = { git = "https://github.com/spydx/capabilities" }
-capabilities = { path = "../../capabilities"}
+capabilities = { path = "../../capabilities" }
 sqlx = { version = "0.5.10", features = ["migrate","runtime-actix-rustls","offline","macros", "sqlite", "postgres", "chrono"] }
 async-trait = "0.1.52"
 tokio = { version = "1.15.0", features = ["full"] }
@@ -16,6 +16,6 @@ actix-http = "3.0.0-beta.18"
 actix-web = "4.0.0-beta.20"
 actix-web-httpauth = "0.6.0-beta.7"
 env_logger = "0.9.0"
-serde_json = "1.0.74"
+serde_json = "1.0.75"
 serde = { version = "1.0.133", features = ["derive"] }
 serde-aux = "3.0.1"

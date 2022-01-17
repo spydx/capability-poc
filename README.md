@@ -17,3 +17,30 @@ This will make you able to run the following commands without problems:
 > cargo check / clippy / build # only the first time
 ```
 
+## To run any of these samples
+
+### Manually
+
+You need:
+
+- Cargo : [install](https://www.rust-lang.org/tools/install)
+- SQLx-cli : `cargo install sqlx-cli` [install](https://lib.rs/crates/sqlx-cli)
+- sqlx needs SQLite support, so either specify or leave for default.
+
+### Docker
+
+After installing Docker:
+
+```sh
+> cd single-api
+> docker build . -t single-api
+> docker run -p 8080:8080 --name single-api single-api
+```
+
+### Docker-compose
+
+After installing Docker:
+
+```sh
+> docker-compose up
+```

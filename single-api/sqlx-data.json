@@ -40,6 +40,30 @@
       "nullable": []
     }
   },
+  "7d3a3ed6a5ec5c15cf4030f856a029b3b1a00e646f2e8866fe9a89adc9c9c914": {
+    "query": "SELECT * FROM bowls WHERE name = $1",
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int64"
+        },
+        {
+          "name": "name",
+          "ordinal": 1,
+          "type_info": "Text"
+        }
+      ],
+      "parameters": {
+        "Right": 1
+      },
+      "nullable": [
+        false,
+        false
+      ]
+    }
+  },
   "968213f768ea849ed9a52cf0c7fa4c0d2792cf0a50b086b049d0bd44925b4bdd": {
     "query": "SELECT * FROM waterlevels WHERE id = $1",
     "describe": {

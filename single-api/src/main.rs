@@ -69,7 +69,7 @@ async fn main() -> Result<(), std::io::Error> {
     let root = "/api";
     let binding = "0.0.0.0:8080";
 
-    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("debug"));
 
     let con_str = "sqlite:test.db".to_string();
     let service = CapService::build(con_str)
@@ -94,7 +94,7 @@ async fn main() -> Result<(), std::io::Error> {
                     .service(add_bowl_waterlevel)
                     .service(get_all_waterlevels)
             )
-            .app_data(service.clone())
+            .app_data(web::Data::new(service.clone()))
     })
     .bind(binding)?
     .run().await?;
@@ -128,8 +128,19 @@ pub async fn create_new_bowl(json: web::Json<BowlsDTO>, svc: web::Data<CapServic
 
 
 #[get("/bowls/{id}")]
-pub async fn get_bowl(_bowl_id: web::Path<String>, _pool: web::Data<CapService>) -> impl Responder {
-    HttpResponse::Ok().body("Not Implemented")
+pub async fn get_bowl(_bowl_id: web::Path<String>, svc: web::Data<CapService>) -> impl Responder {
+    let _svc = svc.get_ref();
+
+    HttpResponse::Ok().json("Not implemented")
+    /*let name = BowlsId { id: bowl_id.as_str().to_string()};
+    let res_bowl = read_db_bowl_by_id(svc,name ).await;
+    
+    match res_bowl {
+        Ok(bowl) => HttpResponse::Ok().json(bowl),
+        _ => HttpResponse::NoContent().json("{ msg : no content } ")
+    }
+    */
+    
 }
 
 
@@ -161,8 +172,13 @@ pub fn create_db_bowl(bowl: Bowls) -> Result<Bowls, CapServiceError> {
             .execute(&self.db)
             .await
             .expect("unable to create bowl");
+    let b = sqlx::query_as!(Bowls, r#"SELECT * FROM bowls WHERE name = $1"#,
+            bowl.name)
+            .fetch_one(&self.db)
+            .await
+            .expect("Didn't fint any bowls");
 
-    Ok(Bowls { id: 0, name: bowl.name})
+    Ok(b)
 }
 
 
@@ -267,5 +283,27 @@ pub fn delete_db_waterlevel_by_id(waterlevel: WaterlevelsId) -> Result<(), CapSe
     Ok(Waterlevels { id: waterlevel.id, date: Some(nt), waterlevel: 0})
 }
 
+/*
+#[capability(Read, Bowls, id = "i64")]
+pub fn read_db_bowl_by_id(bowl_id: i64) -> Result<Bowls, CapServiceError> {
+    let b = sqlx::query_as!(Bowls, r#"SELECT * FROM bowls WHERE name = $1"#,
+        bowl_id)
+        .fetch_one(&self.db)
+        .await
+        .expect("Failed to get a bowl");
+
+    Ok(b)
+}
 
 
+#[capability(Read, Bowls)]
+pub fn read_db_bowl(bowl: Bowls) -> Result<Bowls, CapServiceError> {
+    let b = sqlx::query_as!(Bowls, r#"SELECT * FROM bowls WHERE name = $1"#,
+        bowl.name)
+        .fetch_one(&self.db)
+        .await
+        .expect("Failed to get a bowl");
+
+    Ok(b)
+}
+*/
