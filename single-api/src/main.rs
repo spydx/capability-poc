@@ -35,7 +35,7 @@ pub struct WaterlevelsDTO {
     Capability structs
  */
 #[capabilities(Create, Delete, id = "id")]
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 pub struct Bowls {
     id: i64, 
     name: String,
@@ -108,13 +108,14 @@ async fn main() -> Result<(), std::io::Error> {
     HTTP, prosessing data to the service layer.
 */
 #[post("/bowls/")]
-pub async fn create_new_bowl(json: web::Form<BowlsDTO>, svc: web::Data<CapService>) -> impl Responder {
+pub async fn create_new_bowl(json: web::Json<BowlsDTO>, svc: web::Data<CapService>) -> impl Responder {
     let svc= svc.get_ref();
     let newbowl : Bowls = Bowls {
         id: 0,
         name: json.name.to_owned(),
     };
 
+    println!("{:#?}", newbowl);
     let res_bowl = create_db_bowl(svc, newbowl)
         .await;
 
@@ -127,19 +128,19 @@ pub async fn create_new_bowl(json: web::Form<BowlsDTO>, svc: web::Data<CapServic
 
 
 #[get("/bowls/{id}")]
-pub async fn get_bowl(_bowl_id: String, _pool: web::Data<CapService>) -> impl Responder {
+pub async fn get_bowl(_bowl_id: web::Path<String>, _pool: web::Data<CapService>) -> impl Responder {
     HttpResponse::Ok().body("Not Implemented")
 }
 
 
 #[get("/bowls/{id}/waterlevels/")]
-pub async fn get_bowl_waterlevel(_bowl_id: String, _pool: web::Data<CapService>) -> impl Responder {
+pub async fn get_bowl_waterlevel(_bowl_id: web::Path<String>, _pool: web::Data<CapService>) -> impl Responder {
     HttpResponse::Ok().body("Not Implemented")
 }
 
 
 #[post("/bowls/{id}/waterlevels/")]
-pub async fn add_bowl_waterlevel(_bowl_id: String, _json: web::Form<WaterlevelsDTO>, _pool: web::Data<CapService>) -> impl Responder {
+pub async fn add_bowl_waterlevel(_bowl_id: web::Path<String>, _json: web::Form<WaterlevelsDTO>, _pool: web::Data<CapService>) -> impl Responder {
     HttpResponse::Ok().body("Not Implemented")
 }
 
