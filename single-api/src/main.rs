@@ -23,8 +23,11 @@ pub struct BowlsDTO {
 }
 
 #[derive(Deserialize)]
+
 pub struct WaterlevelsDTO {
+    #[allow(dead_code)] //TODO: remove once this is used.
     id: i64,
+    #[allow(dead_code)] //TODO: remove once this is used.
     waterlevel: i64
 }
 
@@ -93,7 +96,7 @@ async fn main() -> Result<(), std::io::Error> {
             )
             .app_data(service.clone())
     })
-    .bind("0.0.0.0:8080")?
+    .bind(binding)?
     .run().await?;
 
     Ok(())
@@ -124,25 +127,25 @@ pub async fn create_new_bowl(json: web::Form<BowlsDTO>, svc: web::Data<CapServic
 
 
 #[get("/bowls/{id}")]
-pub async fn get_bowl(bowl_id: String, pool: web::Data<CapService>) -> impl Responder {
+pub async fn get_bowl(_bowl_id: String, _pool: web::Data<CapService>) -> impl Responder {
     HttpResponse::Ok().body("Not Implemented")
 }
 
 
 #[get("/bowls/{id}/waterlevels/")]
-pub async fn get_bowl_waterlevel(bowl_id: String, pool: web::Data<CapService>) -> impl Responder {
+pub async fn get_bowl_waterlevel(_bowl_id: String, _pool: web::Data<CapService>) -> impl Responder {
     HttpResponse::Ok().body("Not Implemented")
 }
 
 
 #[post("/bowls/{id}/waterlevels/")]
-pub async fn add_bowl_waterlevel(bowl_id: String, json: web::Form<WaterlevelsDTO>, pool: web::Data<CapService>) -> impl Responder {
+pub async fn add_bowl_waterlevel(_bowl_id: String, _json: web::Form<WaterlevelsDTO>, _pool: web::Data<CapService>) -> impl Responder {
     HttpResponse::Ok().body("Not Implemented")
 }
 
 
 #[get("/bowls/waterlevels/")]
-pub async fn get_all_waterlevels(pool: web::Data<CapService>) -> impl Responder {
+pub async fn get_all_waterlevels(_pool: web::Data<CapService>) -> impl Responder {
     HttpResponse::Ok().body("Not Implemented")
 }
 
@@ -201,7 +204,7 @@ pub fn create_db_waterlevels(waterlevel: Waterlevels) -> Result<Waterlevels, Cap
 
 #[capability(Read, Waterlevels, id = "i64")]
 pub fn get_db_waterlevel_by_id(waterlevel_id: WaterlevelsId) -> Result<Waterlevels, CapServiceError> {
-    /*let bowl = sqlx::query_as!(
+    let waterlevel = sqlx::query_as!(
         Waterlevels,
         r#"SELECT * FROM waterlevels WHERE id = $1"#,
         waterlevel_id.id
@@ -209,11 +212,12 @@ pub fn get_db_waterlevel_by_id(waterlevel_id: WaterlevelsId) -> Result<Waterleve
     .fetch_one(&self.db)
     .await
     .expect(format!("Failed to fetch bowl with id: {}", waterlevel_id.id).as_str());
-    */
-    let time = Utc::now().to_string();
+    
+    Ok(waterlevel)
+    /*let time = Utc::now().to_string();
     let nt = NaiveDateTime::parse_from_str(&time, "%m-%d-%Y %H:%M:%S").expect("parsed not ok");
     
-    Ok(Waterlevels { id: waterlevel_id.id, date: Some(nt), waterlevel: 78})
+    Ok(Waterlevels { id: waterlevel_id.id, date: Some(nt), waterlevel: 78})*/
 }
 
 #[capability(Read, Waterlevels)]
@@ -251,21 +255,15 @@ pub fn delete_db_waterlevel(waterlevel: Waterlevels) -> Result<Waterlevels, CapS
 
 #[capability(Delete, Waterlevels, id = "DateTime")]
 pub fn delete_db_waterlevel_by_id(waterlevel: WaterlevelsId) -> Result<(), CapServiceError> {
-    /*let b = sqlx::query_as!(Waterlevels,r#"SELECT * FROM waterlevels WHERE id = $1"#,
-        waterlevel.id)
-        .fetch_one(&self.db)
-        .await
-        .expect("Failed to find bowl");
-
     let _res = sqlx::query!(r#"DELETE FROM waterlevels WHERE id = $1"#,
         waterlevel.id)
         .execute(&self.db)
         .await
-        .expect("Failed to delete");*/
+        .expect("Failed to delete");
     let time = Utc::now().to_string();
     let nt = NaiveDateTime::parse_from_str(&time, "%m-%d-%Y %H:%M:%S").expect("parsed not ok");
     
-    Ok(Waterlevels { id: waterlevel.id, date: Some(nt), waterlevel: 78})
+    Ok(Waterlevels { id: waterlevel.id, date: Some(nt), waterlevel: 0})
 }
 
 
