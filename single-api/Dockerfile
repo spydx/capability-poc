@@ -1,8 +1,7 @@
 FROM rust:1.58 as builder
 WORKDIR /usr/src/myapp
 COPY . .
-RUN cargo install sqlx-cli
-RUN sqlx database create
+COPY Cargo.toml.docker Cargo.toml
 RUN cargo install --path .
 
 FROM debian:bookworm-slim
@@ -12,4 +11,4 @@ WORKDIR /usr/local/bin/
 COPY --from=builder /usr/src/myapp/test.db ./test.db
 COPY --from=builder /usr/local/cargo/bin/single-api ./single-api
 EXPOSE 8080
-CMD ["single-api"]%        
+CMD ["single-api"]
