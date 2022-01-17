@@ -131,7 +131,9 @@ where
         .await
         // this is the entry point, to call the next part.
 }
-impl Capability<Create<Bowls>> for CapService { //the trait that we are implementing
+
+//the trait that we are implementing : CapCreateBowls
+impl Capability<Create<Bowls>> for CapService { 
     type Data = Bowls;
     type Error = CapServiceError;
 
@@ -226,4 +228,3 @@ impl actix_web::dev::HttpServiceFactory for create_new_bowl {
     }
 }
 ```
-
