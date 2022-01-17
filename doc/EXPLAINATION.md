@@ -32,6 +32,7 @@ All it's related `Waterlevel` data is stored in the `waterlevels` table for toge
 Each table has its own struct decorated with the Capabilites we would like.
 
 Right now, the `Bowls` has only, `Create` and `Delete`.
+
 ```rust
 #[capabilities(Create, Delete, id = "id")]
 #[derive(Serialize, Debug)]
@@ -66,12 +67,16 @@ curl -v  --header "Content-Type: application/json" \
     http://localhost:8080/api/bowls/
 ```
 
-User sends -> `BowlsDto` -> JWT filter -> fn create_new_bowl -> fn create_db_bowls -> to disk
+User sends -> `BowlsDTO` -> JWT filter -> fn create_new_bowl -> fn create_db_bowls -> to disk
 
 Note that the JWT filter is not implemented yet.
+The idea is that for Create, it will look in the JWT for a Claim/Scope called: `CapCreateBowls`and validate the token. If this doesn't validate and is not true, then the HTTP call is dropped.
 
+Let's look a bit into why we are looking for `CapCreateBowls` in the JWT.
 When we look at the expanded code for `Bowls`, this is what is created:
 It will generate all the traits for both capabilities.
+We are currently only interested in one, the Create version. 
+Marked in the list.
 
 ```rust
 pub struct Bowls {
@@ -81,6 +86,8 @@ pub struct Bowls {
 pub struct BowlsId { // this is a struct that contains the id field
     id: i64,
 }
+
+// this one for our example
 pub trait CapCreateBowls: 
     Capability<Create<Bowls>, Data = Bowls, Error = CapServiceError> {} // Create interface
 impl CapCreateBowls for CapService {}
@@ -95,6 +102,21 @@ pub trait CapDeleteBowls:
 impl CapDeleteBowls for CapService {}
 ```
 
+Before we can compile our code and deploy the api, all these traits have to be implemented.
+Meaning, if you added Delete, but never intended it to be implemented in this iteration,
+you are either forced to remove it or do the implementation to get your code running.
+To implement these traits, we decorate functions with `#[capability(<operation>, <struct>)]`
+
+In main.rs, you'll find this block:
+
+```rust
+#[capability(Create, Bowls)]
+pub fn create_db_bowl(bowl: Bowls) -> Result<Bowls, CapServiceError> {...}
+```
+
+This user defined block becomes this larger wrapped block in the expanded code.
+It implements the traits and links it to our database service and the capability trait that we need.
+This extended version is abit noisy, since there is a lot of 'life0 and completly expanded code here.
 
 ```rust
 pub async fn create_db_bowl<Service>(
@@ -105,13 +127,15 @@ where
     Service: CapCreateBowls, //the trait that we need to do this job
 {
     service
-        .perform(::capabilities::Create { data: param }) // the action itself
+        .perform(::capabilities::Create { data: param })
         .await
+        // this is the entry point, to call the next part.
 }
 impl Capability<Create<Bowls>> for CapService { //the trait that we are implementing
     type Data = Bowls;
     type Error = CapServiceError;
 
+    // second entry point
     fn perform<'life0, 'async_trait>(
         &'life0 self,
         action: Create<Bowls>,
@@ -149,8 +173,8 @@ impl Capability<Create<Bowls>> for CapService { //the trait that we are implemen
 }
 ```
 
-
-HTTP calling code
+The user post request gets routed through this web server endpoint.
+If the JWT token is not valid, and/or the scope/claim is missing this function is never called.
 
 ```rust
 #[allow(non_camel_case_types, missing_docs)]
@@ -202,3 +226,4 @@ impl actix_web::dev::HttpServiceFactory for create_new_bowl {
     }
 }
 ```
+
