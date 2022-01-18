@@ -10,13 +10,14 @@ async fn main() -> Result<(), std::io::Error> {
     println!("Hello, world!");
 
     let root = "/api";
-    let binding = "0.0.0.0:8080";
+    let binding = "0.0.0.0:8081";
 
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("debug"));
 
     let con_str = "sqlite:autorityserver.db".to_string();
     let database = SqlitePoolOptions::new()
-        .connect(con_str)
+        .connect(&con_str)
+        .await
         .expect("Failed to get database connection");
 
     sqlx::migrate!("./migrations")
@@ -45,11 +46,11 @@ async fn main() -> Result<(), std::io::Error> {
 
 
 #[get("/login")]
-pub async fn user_login(pool: web::Data<SqlitePool>) -> impl Responder {
+pub async fn user_login(_pool: web::Data<SqlitePool>) -> impl Responder {
     HttpResponse::Ok().json("{ \"msg:\" \"not implemented\" }")
 }
 
 #[get("/claims")]
-pub async fn get_claims(pool: web::Data<SqlitePool>) -> impl Responder {
+pub async fn get_claims(_pool: web::Data<SqlitePool>) -> impl Responder {
     HttpResponse::Ok().json("{ \"msg:\" \"not implemented\" }")
 }
