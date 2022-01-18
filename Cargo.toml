@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+    "as-api",
+    "single-api",
+]
