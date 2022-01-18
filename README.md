@@ -27,7 +27,7 @@ You need:
 - SQLx-cli : `cargo install sqlx-cli` [install](https://lib.rs/crates/sqlx-cli)
 - sqlx needs SQLite support, so either specify or leave for default.
 
-### Docker
+### Docker (TODO)
 
 After installing Docker:
 
@@ -37,7 +37,7 @@ After installing Docker:
 > docker run -p 8080:8080 --name single-api single-api
 ```
 
-### Docker-compose
+### Docker-compose (TODO)
 
 After installing Docker:
 
