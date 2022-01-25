@@ -2,7 +2,6 @@ use async_trait::async_trait;
 use person::*;
 use sqlx::{Pool, Sqlite, SqlitePool};
 
-
 mod person {
     use async_trait::async_trait;
     use sqlx::{Pool, Sqlite};
@@ -84,7 +83,7 @@ impl CreateReadCap for Person<CreateRead> {
         .expect("Failed to write to database");
         person
     }
-    
+
     async fn read(db: &Pool<Sqlite>, id: i64) -> Person<CreateRead> {
         let r = sqlx::query!(
             r#"SELECT id, firstname, lastname FROM person WHERE id = $1"#,
@@ -117,5 +116,9 @@ async fn main() {
 
     println!("{:#?}", p_created);
     println!("{:#?}", p_read);
-    assert_eq!(p_created, p_read, "The to persons {:#?} and {:#?} are not equal" , p_created, p_read);
+    assert_eq!(
+        p_created, p_read,
+        "The to persons {:#?} and {:#?} are not equal",
+        p_created, p_read
+    );
 }

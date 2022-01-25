@@ -4,7 +4,11 @@ trait MakeI64 {
 
 impl MakeI64 for bool {
     fn convert(&self) -> i64 {
-        if *self { 0 } else { 1 }
+        if *self {
+            0
+        } else {
+            1
+        }
     }
 }
 
@@ -14,10 +18,10 @@ impl MakeI64 for u64 {
     }
 }
 
-fn main() { 
+fn main() {
     let boolean: bool = true;
     let number: u64 = u64::MAX;
 
-    println!("{} -> {}", boolean, boolean.convert());   // true -> 0 
-    println!("{} -> {}", number, number.convert());     // 18446744073709551615 -> -1
+    println!("{} -> {}", boolean, boolean.convert()); // true -> 0
+    println!("{} -> {}", number, number.convert()); // 18446744073709551615 -> -1
 }
