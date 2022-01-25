@@ -19,7 +19,7 @@ trait CreateRead<S> {
 impl CreateRead<Person> for Person {
     fn read(id: i64) -> Person {
         Person {
-            id: rand::random(),
+            id: id,
             firstname: "kenneth".to_string(),
             lastname: "fossen".to_string(),
         }
@@ -28,8 +28,8 @@ impl CreateRead<Person> for Person {
     fn create(firstname: String, lastname: String) -> Person {
         Person {
             id: rand::random(),
-            firstname: "kenneth".to_string(),
-            lastname: "fossen".to_string(),
+            firstname: firstname,
+            lastname: lastname,
         }
     }
 }
@@ -64,7 +64,7 @@ impl DBCreateRead<Person> for Service {
 
     async fn create_db(&self, data: Person) -> Person {
         let _r = sqlx::query!(
-            r#"INSERT INTO person (id, firstname, lastname) VALUES ($1,$2, $3)"#,
+            r#"INSERT INTO person (id, firstname, lastname) VALUES ($1, $2, $3)"#,
             data.id,
             data.firstname,
             data.lastname
@@ -78,16 +78,11 @@ impl DBCreateRead<Person> for Service {
 
 #[tokio::main]
 async fn main() {
-    let con_str = "sqlite:../persons.db";
+    let con_str = "sqlite:bounds_persons.db";
     let db: Pool<Sqlite> = SqlitePoolOptions::new()
         .connect(con_str)
         .await
         .expect("Failed to create database");
-
-    sqlx::migrate!("./migrations")
-        .run(&db)
-        .await
-        .expect("Failed to run migrations");
 
     let _service = Service { con: db };
 
@@ -98,4 +93,5 @@ async fn main() {
     let read_res = Service::read_db(&_service, create_res.id).await;
 
     assert_eq!(create_res, read_res);
+    println!("Create<{:#?}> -> Read<{:#?}>", create_res, read_res);
 }
