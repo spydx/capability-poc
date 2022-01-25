@@ -104,7 +104,7 @@ impl CreateReadCap for Person<CreateRead> {
 
 #[tokio::main]
 async fn main() {
-    let connection_string = "sqlite:../persons.db";
+    let connection_string = "sqlite:persons.db";
     let database = SqlitePool::connect(connection_string)
         .await
         .expect("Failed to get database");
