@@ -92,6 +92,9 @@ async fn main() {
 
     let read_res = Service::read_db(&_service, create_res.id).await;
 
+    let _p2 = Person { id: rand::random(), firstname: "Kenneth".to_string(), lastname: "fossen".to_string()};
+    let _p2_createdb = Service::create_db(&_service, _p2).await;
+
     assert_eq!(create_res, read_res);
     println!("Create<{:#?}> -> Read<{:#?}>", create_res, read_res);
 }
