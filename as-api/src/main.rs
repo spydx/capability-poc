@@ -3,7 +3,7 @@ use sqlx::sqlite::SqlitePoolOptions;
 
 use actix_web::{App, HttpServer, HttpResponse, Responder, web};
 use actix_web::middleware::Logger;
-use actix_web::{get};
+use actix_web::{get, post};
 
 #[tokio::main]
 async fn main() -> Result<(), std::io::Error> {
@@ -30,9 +30,9 @@ async fn main() -> Result<(), std::io::Error> {
             .wrap(Logger::default())
             .service(
                 web::scope(&root)
-                    .service(user_login)
+                    .service(login_user)
                     .service(get_claims)
-
+                    .service(get_token)
             )
             .app_data(web::Data::new(database.clone()))
             
@@ -45,12 +45,17 @@ async fn main() -> Result<(), std::io::Error> {
 }
 
 
-#[get("/login")]
-pub async fn user_login(_pool: web::Data<SqlitePool>) -> impl Responder {
+#[post("/login")]
+pub async fn login_user(_pool: web::Data<SqlitePool>) -> impl Responder {
     HttpResponse::Ok().json("{ \"msg:\" \"not implemented\" }")
 }
 
 #[get("/claims")]
 pub async fn get_claims(_pool: web::Data<SqlitePool>) -> impl Responder {
+    HttpResponse::Ok().json("{ \"msg:\" \"not implemented\" }")
+}
+
+#[get("/token")]
+pub async fn get_token() -> impl Responder {
     HttpResponse::Ok().json("{ \"msg:\" \"not implemented\" }")
 }

@@ -1,0 +1,43 @@
+{
+  "db": "SQLite",
+  "cba88932ef2796a61217e16131f622328e44c0cf2497e80ad59cfbbd54c648f0": {
+    "query": "SELECT id, firstname, lastname FROM person WHERE id = $1",
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int64"
+        },
+        {
+          "name": "firstname",
+          "ordinal": 1,
+          "type_info": "Text"
+        },
+        {
+          "name": "lastname",
+          "ordinal": 2,
+          "type_info": "Text"
+        }
+      ],
+      "parameters": {
+        "Right": 1
+      },
+      "nullable": [
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "d78ff87c1e755d864544455463c020f84c1a228cc39a6cef8c2f7bc716a61ddf": {
+    "query": "INSERT INTO person (id, firstname, lastname) VALUES ($1, $2, $3)",
+    "describe": {
+      "columns": [],
+      "parameters": {
+        "Right": 3
+      },
+      "nullable": []
+    }
+  }
+}

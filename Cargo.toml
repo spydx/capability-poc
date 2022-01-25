@@ -3,4 +3,5 @@
 members = [
     "as-api",
     "single-api",
+    "trait-bounds",
 ]
