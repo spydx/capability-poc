@@ -1,5 +1,11 @@
 # Capability PoC
 
+PS: remember to clone with `--recurse-submodules``
+
+```sh
+git clone --recurse-submodules <repo>
+```
+
 ## Important setting
 
 When using `cargo` and you are trying to fetch the lib repo from GitHub,
@@ -27,13 +33,12 @@ You need:
 - SQLx-cli : `cargo install sqlx-cli` [install](https://lib.rs/crates/sqlx-cli)
 - sqlx needs SQLite support, so either specify or leave for default.
 
-### Docker (TODO)
+### Docker
 
-After installing Docker:
+After installing Docker, from root:
 
 ```sh
-> cd single-api
-> docker build . -t single-api
+> docker build . --file dockerfiles/single-api -t single-api
 > docker run -p 8080:8080 --name single-api single-api
 ```
 
