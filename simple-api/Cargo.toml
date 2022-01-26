@@ -1,5 +1,5 @@
 [package]
-name = "single_api"
+name = "simple_api"
 version = "0.1.0"
 edition = "2021"
 

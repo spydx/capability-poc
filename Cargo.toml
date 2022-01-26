@@ -2,7 +2,7 @@
 
 members = [
     "as-api",
-    "single-api",
+    "simple-api",
     "trait-bounds",
     "capabilities",
 ]

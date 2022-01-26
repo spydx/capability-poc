@@ -42,10 +42,20 @@ After installing Docker, from root:
 > docker run -p 8080:8080 --name single-api single-api
 ```
 
-### Docker-compose (TODO)
+### Docker-compose
 
 After installing Docker:
+
+Bring everything up
 
 ```sh
 > docker-compose up
 ```
+
+Just simple-api
+
+```sh
+> docker-compose up simple-api
+```
+
+
