@@ -1,6 +1,6 @@
 # Capability PoC
 
-PS: remember to clone with `--recurse-submodules``
+PS: remember to clone with `--recurse-submodules`
 
 ```sh
 git clone --recurse-submodules <repo>
