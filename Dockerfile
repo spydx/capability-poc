@@ -1,7 +1,7 @@
 FROM rust:1.58 as builder
 WORKDIR /usr/src/myapp
-COPY . .
-COPY Cargo.toml.docker Cargo.toml
+COPY single-api .
+COPY capabilities /usr/src/capabilities
 RUN cargo install --path .
 
 FROM debian:bookworm-slim
