@@ -1,7 +1,7 @@
 services:
-  single-api:
+  simple-api:
     build:
       context: .
-      dockerfile: dockerfiles/single-api
+      dockerfile: dockerfiles/simple-api
     ports:
       - "8080:8080"
