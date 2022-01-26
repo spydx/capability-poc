@@ -1,0 +1,3 @@
+[submodule "capabilities"]
+	path = capabilities
+	url = https://github.com/spydx/capabilities.git

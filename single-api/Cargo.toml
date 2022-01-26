@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 # capabilities = { git = "https://github.com/spydx/capabilities" }
-capabilities = { path = "../../capabilities" }
+capabilities = { path = "../capabilities" }
 sqlx = { version = "0.5.10", features = ["migrate","runtime-actix-rustls","offline","macros", "sqlite", "postgres", "chrono"] }
 async-trait = "0.1.52"
 tokio = { version = "1.15.0", features = ["full"] }
