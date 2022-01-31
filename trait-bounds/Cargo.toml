@@ -12,3 +12,4 @@ tokio = { version = "1.15.0", features = ["full"] }
 chrono = { version = "0.4.19", features = ["serde"] }
 async-trait = "0.1.52"
 typestate = "0.8.0"
+rstest = "0.12.0"
