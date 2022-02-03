@@ -5,3 +5,39 @@ services:
       dockerfile: dockerfiles/simple-api
     ports:
       - "8080:8080"
+    depends_on:
+      - as-api
+
+  as-api:
+    build:
+      context: .
+      dockerfile: dockerfiles/gnap-as
+    ports: 
+      - "8081:8081"
+      - "9433:9433"
+    depends_on:
+      - redis-poc
+      - monogodb-poc
+  redis-poc:
+    image: redis:alpine
+    container_name: redis-poc
+    volumes:
+    - ./gnap/data/redis:/data
+    ports:
+      - 6379:6379
+    
+  mongodb-poc:
+    image : mongo:5
+    container_name: mongodb-poc
+    depends_on:
+      - redis-poc
+    environment:
+    - PUID=1000
+    - PGID=1000
+    - MONGO_INITDB_DATABASE=gnap
+    volumes:
+    - ./gnap/data/mongodb/database:/data/db
+    - ./gnap/mongodb-init/:/docker-entrypoint-initdb.d/:ro
+    ports:
+    - 27017:27017
+    restart: unless-stopped
