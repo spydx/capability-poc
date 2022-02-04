@@ -10,6 +10,6 @@ WORKDIR /usr/local/bin/
 COPY --from=builder /usr/src/myapp/gnap_as/.env .
 COPY --from=builder /usr/src/myapp/gnap_as/.keystore .
 COPY --from=builder /usr/local/cargo/bin/gnap_as ./gnap-as
-EXPOSE 8081
+EXPOSE 8000
 EXPOSE 9443
 CMD ["gnap-as"]
