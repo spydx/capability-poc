@@ -144,13 +144,13 @@ pub async fn get_bowl(_bowl_id: web::Path<String>, svc: web::Data<CapService>) -
 }
 
 
-#[get("/bowls/{id}/waterlevels/")]
+#[get("/bowls/waterlevels/{id}")]
 pub async fn get_bowl_waterlevel(_bowl_id: web::Path<String>, _pool: web::Data<CapService>) -> impl Responder {
     HttpResponse::Ok().body("Not Implemented")
 }
 
 
-#[post("/bowls/{id}/waterlevels/")]
+#[post("/bowls/waterlevels/{id}")]
 pub async fn add_bowl_waterlevel(_bowl_id: web::Path<String>, _json: web::Form<WaterlevelsDTO>, _pool: web::Data<CapService>) -> impl Responder {
     HttpResponse::Ok().body("Not Implemented")
 }
