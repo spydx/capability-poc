@@ -5,4 +5,5 @@ members = [
     "simple-api",
     "trait-bounds",
     "capabilities",
+    "gnap-cli"
 ]
