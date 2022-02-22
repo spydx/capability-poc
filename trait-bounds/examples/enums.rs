@@ -1,12 +1,25 @@
-
+/*
 #![allow(dead_code)]
 // This example doesn't work due to imcomatible implementation of copy
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug)]
 struct Person {
     id: i64,
     firstname: String,
     lastname: String,
 }
+
+impl Clone for Person {
+    fn clone(&self) -> Self {
+        let f = self.firstname.to_string();
+        let l = self.lastname.to_string();
+        Self {
+            id : self.id.clone(),
+            firstname: f, 
+            lastname: l,
+        }
+    }
+}
+
 enum Capability<T> {
     Read { id: i64},
     Create(T),
@@ -40,3 +53,6 @@ fn main() {
 
     println!("{:#?}", &list);
 }
+*/
+
+fn main() {}

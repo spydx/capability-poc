@@ -6,9 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rand = "0.8.4"
-sqlx = { version = "0.5.10", features = ["migrate","runtime-actix-rustls","offline","macros", "sqlite", "postgres", "chrono"] }
-tokio = { version = "1.15.0", features = ["full"] }
+rand = "0.8.5"
+sqlx = { version = "0.5.11", features = ["migrate","runtime-actix-rustls","offline","macros", "sqlite", "postgres", "chrono"] }
+tokio = { version = "1.17.0", features = ["full"] }
 chrono = { version = "0.4.19", features = ["serde"] }
 async-trait = "0.1.52"
 typestate = "0.8.0"
