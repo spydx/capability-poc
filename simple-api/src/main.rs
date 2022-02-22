@@ -12,6 +12,7 @@ use actix_web::web::{self};
 use actix_web_httpauth::middleware::HttpAuthentication;
 #[allow(unused_imports)]
 use capabilities::{Create, Delete, Update, Read, ReadAll, DeleteAll, UpdateAll};
+pub mod filter;
 
 /*
     DTO - Data Transfere Objects 
@@ -62,7 +63,7 @@ where
 }
 
 #[service(SqliteDb, name = "db")]
-#[tokio::main]
+#[actix_web::main]
 async fn main() -> Result<(), std::io::Error> {
     println!("Hello, world!");
 
@@ -70,7 +71,7 @@ async fn main() -> Result<(), std::io::Error> {
     let binding = "0.0.0.0:8080";
 
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("debug"));
-
+    
     let con_str = "sqlite:test.db".to_string();
     let service = CapService::build(con_str)
         .await
@@ -81,7 +82,7 @@ async fn main() -> Result<(), std::io::Error> {
         .await
         .expect("Failed to run sql mig on database");
 
-    //let middleware = HttpAuthentication::bearer(auth::token_validator);
+    //let middleware = HttpAuthentication::bearer(filter::token_introspection);
     HttpServer::new(move || {
         App::new()
             //.wrap(middleware.clone())
