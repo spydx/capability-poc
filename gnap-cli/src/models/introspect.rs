@@ -15,7 +15,7 @@ pub struct IntrospectRequest {
 pub struct InstrospectResponse {
     pub active: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub access: Option<AccessRequest>,
+    pub access: Option<Vec<AccessRequest>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub key: Option<String>,
 }

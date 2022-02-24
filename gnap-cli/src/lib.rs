@@ -28,7 +28,8 @@ pub async fn discover(url: &str) -> Result<GnapOptions, Box<dyn StdError>> {
 }
 
 pub async fn introspect(token: String, rs_ref: String, url: String) -> Result<InstrospectResponse, Box<dyn StdError>> {
-    let path = as_path(&url, "tx/introspect");
+    let path = as_path(&url, "introspect");
+    debug!("Using path: {}", path);
 
     let ir = IntrospectRequest {
         access_token: token.to_owned(),
@@ -37,19 +38,16 @@ pub async fn introspect(token: String, rs_ref: String, url: String) -> Result<In
         access: None
     };
 
-    
-    debug!("Using path: {}", path);
-    let response: InstrospectResponse = reqwest::Client::new()
+    let response = reqwest::Client::new()
         .post(&path)
         .json(&ir)
         .send()
         .await?
         .json()
         .await?;
-    debug!("IntroResponse: {:#?}", &response);
+
     Ok(response)
 }
-
 
 /*
     1. Discovery
