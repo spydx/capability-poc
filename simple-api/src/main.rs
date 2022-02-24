@@ -82,13 +82,14 @@ async fn main() -> Result<(), std::io::Error> {
         .await
         .expect("Failed to run sql mig on database");
 
-    //let middleware = HttpAuthentication::bearer(filter::token_introspection);
+    let bearer_auth = HttpAuthentication::bearer(filter::token_introspection);
     HttpServer::new(move || {
         App::new()
-            //.wrap(middleware.clone())
+            .wrap(bearer_auth.clone())
             .wrap(Logger::default())
             .service(
                 web::scope(&root)
+                    .service(hello)
                     .service(create_new_bowl)
                     .service(get_bowl)
                     .service(get_bowl_waterlevel)
@@ -103,6 +104,11 @@ async fn main() -> Result<(), std::io::Error> {
     Ok(())
 }
 
+
+#[get("/")]
+pub async fn hello() -> impl Responder {
+    HttpResponse::Ok().body("hello from server")
+}
 
 
 /*
