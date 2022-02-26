@@ -37,17 +37,20 @@ async fn token_introspection(
                     ir
                 },
                 false => 
-                    return Err(actix_web::error::ErrorForbidden("body1"))
+                    return Err(actix_web::error::ErrorForbidden("Inactive token"))
             }
         },
         Err(_) => {
-            return Err(actix_web::error::ErrorForbidden("body2"))
+            return Err(actix_web::error::ErrorForbidden("Cannot introspect this token"))
         }
     };
 
-    
+    // Should default deny
+    // Err(actix_web::error::ErrorForbidden("Invalid"))
     Ok(req)
 }
+
+
 
 
 
