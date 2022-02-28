@@ -1,9 +1,10 @@
-use actix_web::{App, HttpServer, HttpResponse, Responder, Error, web, get};
+use actix_web::{App, HttpServer, HttpResponse, Responder, Error, web, get, HttpMessage};
 use actix_web::dev::ServiceRequest;
 use actix_web_httpauth::extractors::bearer::BearerAuth;
 use actix_web_httpauth::middleware::HttpAuthentication;
 use actix_web::middleware::Logger;
 use gnap_cli::introspect;
+use gnap_cli::models::access_token::AccessRequest;
 use log::debug;
 
 /*
@@ -28,13 +29,19 @@ async fn token_introspection(
     let rs_ref = "e8a2968a-f183-45a3-b63d-4bbbd1dad276".to_string();
     let url = format!("{}", BASEPATH);
     
-    let _valid = match introspect(token, rs_ref, url).await {
+    match introspect(token, rs_ref, url).await {
         Ok(ir) =>  {
             println!("{:#?}", ir);
             match ir.active {
                 true => {
                     debug!("{:#?}", ir);
-                    ir
+                    let access_req = ir.access.unwrap();
+                    let cap = match get_access_type(access_req.first().unwrap()) {
+                        Ok(cap) => cap,
+                        Err(err) => return Err(err)
+                    };
+                    req.extensions_mut().insert(cap)
+                    Ok(req)
                 },
                 false => 
                     return Err(actix_web::error::ErrorForbidden("Inactive token"))
@@ -43,14 +50,37 @@ async fn token_introspection(
         Err(_) => {
             return Err(actix_web::error::ErrorForbidden("Cannot introspect this token"))
         }
-    };
+    }
 
     // Should default deny
-    // Err(actix_web::error::ErrorForbidden("Invalid"))
-    Ok(req)
+    //Err(actix_web::error::ErrorForbidden("Invalid Request"))
 }
 
+use capabilities::Capability;
+use capabilities::Capability::Read;
 
+
+fn get_access_type(access: AccessRequest) -> Result<Capability, Error>{
+    match access {
+        AccessRequest::Value { actions, ..
+            } => {
+                for action in actions.unwrap() {
+                    let r = match action.as_str() {
+                        "read" => Some(Read),
+                        _ => None,
+                    };
+
+                    if r.is_some() {
+                        return Ok(r.unwrap())
+                    } else {
+                        return Err(actix_web::error::ErrorForbidden("Unknown access type"))
+                    }
+                }
+            },
+        _ => Err(actix_web::error::ErrorForbidden("Reference is invalid here")),
+        
+    }
+}
 
 
 
