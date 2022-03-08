@@ -186,29 +186,24 @@ pub fn create_db_bowl(bowl: Bowls) -> Result<Bowls, CapServiceError> {
 }
 
 #[capability(Delete, Bowls)]
-pub fn delete_db_bowl(bowl: Bowls) -> Result<Bowls, CapServiceError> {
-    let _res = sqlx::query!(r#"DELETE FROM bowls WHERE name = $1"#, bowl.name)
+pub fn delete_db_bowl(bowl: Bowls) -> Result<(), CapServiceError> {
+    match sqlx::query!(r#"DELETE FROM bowls WHERE name = $1"#, bowl.name)
         .execute(&self.db)
-        .await
-        .expect("unable to delete bowl");
-
-    Ok(Bowls {
-        id: 0,
-        name: bowl.name,
-    })
+        .await {
+             Ok(_) => Ok(()),
+             Err(_) => Err(CapServiceError),
+    }
 }
 
 #[capability(Delete, Bowls, id = "i64")]
-pub fn delete_db_bowl_by_id(bowl_id: BowlsId) -> Result<Bowls, CapServiceError> {
-    let _res = sqlx::query!(r#"DELETE FROM bowls WHERE id = $1"#, bowl_id.id)
+pub fn delete_db_bowl_by_id(bowl_id: BowlsId) -> Result<(), CapServiceError> {
+    match sqlx::query!(r#"DELETE FROM bowls WHERE id = $1"#, bowl_id.id)
         .execute(&self.db)
         .await
-        .expect("unable to delete bowl");
-
-    Ok(Bowls {
-        id: bowl_id.id,
-        name: "DELETED".to_string(),
-    })
+        {
+            Ok(_) => Ok(()),
+            Err(_) => Err(CapServiceError),
+        }
 }
 
 #[capability(Create, Waterlevels)]
@@ -270,35 +265,26 @@ pub fn get_db_all_waterlevels() -> Result<Vec<Waterlevels>, CapServiceError> {
 }
 
 #[capability(Delete, Waterlevels)]
-pub fn delete_db_waterlevel(waterlevel: Waterlevels) -> Result<Waterlevels, CapServiceError> {
-    let _res = sqlx::query!(
+pub fn delete_db_waterlevel(waterlevel: Waterlevels) -> Result<(), CapServiceError> {
+    match sqlx::query!(
         r#"DELETE FROM waterlevels WHERE date = $1"#,
         waterlevel.date
     )
     .execute(&self.db)
-    .await
-    .expect("Failed to delete");
-    Ok(Waterlevels {
-        id: waterlevel.id,
-        date: waterlevel.date,
-        waterlevel: waterlevel.waterlevel,
-    })
+    .await {
+        Ok(_) => Ok(()),
+        Err(_) => Err(CapServiceError)
+    }
 }
 
 #[capability(Delete, Waterlevels, id = "DateTime")]
 pub fn delete_db_waterlevel_by_id(waterlevel: WaterlevelsId) -> Result<(), CapServiceError> {
-    let _res = sqlx::query!(r#"DELETE FROM waterlevels WHERE id = $1"#, waterlevel.id)
+    match sqlx::query!(r#"DELETE FROM waterlevels WHERE id = $1"#, waterlevel.id)
         .execute(&self.db)
-        .await
-        .expect("Failed to delete");
-    let time = Utc::now().to_string();
-    let nt = NaiveDateTime::parse_from_str(&time, "%m-%d-%Y %H:%M:%S").expect("parsed not ok");
-
-    Ok(Waterlevels {
-        id: waterlevel.id,
-        date: Some(nt),
-        waterlevel: 0,
-    })
+        .await {
+            Ok(_) => Ok(()),
+            Err(_) => Err(CapServiceError)
+        }
 }
 
 /*
