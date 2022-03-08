@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use crate::models::access_token::AccessRequest;
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct IntrospectRequest {

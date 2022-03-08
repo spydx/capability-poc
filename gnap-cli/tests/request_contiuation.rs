@@ -1,8 +1,7 @@
-
-use uuid::Uuid;
 use gnap_cli::models::interact::InteractResponse;
-use gnap_cli::models::response::GrantResponse;
 use gnap_cli::models::request::RequestContinuation;
+use gnap_cli::models::response::GrantResponse;
+use uuid::Uuid;
 
 #[test]
 fn request_continuation() {

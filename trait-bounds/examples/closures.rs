@@ -1,23 +1,24 @@
 use std::thread;
 
-use std::time::{Duration};
+use std::time::Duration;
 #[allow(dead_code)]
 struct Person {
-    id: i64, 
-    firstname: String, 
+    id: i64,
+    firstname: String,
     lastname: String,
 }
 
 struct Capability<T>
-where T: Fn(i64) -> i64
+where
+    T: Fn(i64) -> i64,
 {
     operation: T,
-    value: Option<i64>
+    value: Option<i64>,
 }
 
-
 impl<T> Capability<T>
-where T: Fn(i64) -> i64,
+where
+    T: Fn(i64) -> i64,
 {
     fn new(operation: T) -> Capability<T> {
         Capability {
@@ -26,7 +27,7 @@ where T: Fn(i64) -> i64,
         }
     }
 
-    fn value(&mut self, arg: i64) -> i64{
+    fn value(&mut self, arg: i64) -> i64 {
         match self.value {
             Some(v) => v,
             None => {
@@ -41,7 +42,6 @@ where T: Fn(i64) -> i64,
 fn main() {
     println!("hellowO");
     let _workout = generate_workout(1, 1);
-
 }
 
 fn generate_workout(intensity: i64, random_number: i64) -> i64 {
@@ -67,7 +67,6 @@ fn generate_workout(intensity: i64, random_number: i64) -> i64 {
     random_number
 }
 
-
 #[cfg(test)]
 mod tests {
     use crate::generate_workout;
@@ -75,13 +74,9 @@ mod tests {
 
     #[rstest]
     #[case(25, 3)]
-    #[case(3,3)]
-    #[case(1,1)]
+    #[case(3, 3)]
+    #[case(1, 1)]
     fn workout(#[case] input: i64, #[case] expected: i64) {
         assert_eq!(expected, generate_workout(input, expected))
-        
     }
 }
-
-
-

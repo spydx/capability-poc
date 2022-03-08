@@ -1,7 +1,7 @@
+use crate::models::access_token::AccessToken;
+use crate::models::interact::InteractResponse;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
-use crate::models::interact::InteractResponse;
-use crate::models::access_token::AccessToken;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct GrantResponse {
@@ -25,4 +25,3 @@ impl GrantResponse {
         }
     }
 }
-

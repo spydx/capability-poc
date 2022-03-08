@@ -1,17 +1,15 @@
-use serde::ser::StdError;
-use models::options::GnapOptions;
-use models::introspect::{IntrospectRequest, InstrospectResponse};
 use log::debug;
-
+use models::introspect::{InstrospectResponse, IntrospectRequest};
+use models::options::GnapOptions;
+use serde::ser::StdError;
 
 pub mod models;
 pub mod serde_utils;
 
-
 #[allow(dead_code)]
 const GNAP_AS_HOST: &str = "http://localhost:8000";
 
-pub fn as_path(url:&str,  part: &str) -> String {
+pub fn as_path(url: &str, part: &str) -> String {
     format!("{}/{}", url, part)
 }
 pub async fn discover(url: &str) -> Result<GnapOptions, Box<dyn StdError>> {
@@ -27,7 +25,11 @@ pub async fn discover(url: &str) -> Result<GnapOptions, Box<dyn StdError>> {
     Ok(response)
 }
 
-pub async fn introspect(token: String, rs_ref: String, url: String) -> Result<InstrospectResponse, Box<dyn StdError>> {
+pub async fn introspect(
+    token: String,
+    rs_ref: String,
+    url: String,
+) -> Result<InstrospectResponse, Box<dyn StdError>> {
     let path = as_path(&url, "introspect");
     debug!("Using path: {}", path);
 
@@ -35,7 +37,7 @@ pub async fn introspect(token: String, rs_ref: String, url: String) -> Result<In
         access_token: token.to_owned(),
         proof: Some(String::from("jwks")),
         resource_server: rs_ref.to_owned(),
-        access: None
+        access: None,
     };
 
     let response = reqwest::Client::new()
@@ -61,7 +63,6 @@ mod tests {
 
     #[tokio::test]
     async fn gnap_session_req() {
-        
         let gnap_host = "http://localhost:8000";
         let options = discover(gnap_host).await;
 

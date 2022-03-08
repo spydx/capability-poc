@@ -1,6 +1,6 @@
-use actix_web::{App, HttpServer, HttpResponse, Responder,  web, get};
-use actix_web_httpauth::middleware::HttpAuthentication;
 use actix_web::middleware::Logger;
+use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
+use actix_web_httpauth::middleware::HttpAuthentication;
 use capabilities::Capability;
 
 /*
@@ -18,24 +18,20 @@ async fn main() -> Result<(), std::io::Error> {
     let binding = "0.0.0.0:8080";
 
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("debug"));
-    
-    let bearer_auth = HttpAuthentication::bearer(capabilities::token_introspection );
+
+    let bearer_auth = HttpAuthentication::bearer(capabilities::token_introspection);
     HttpServer::new(move || {
         App::new()
             .wrap(bearer_auth.clone())
             .wrap(Logger::default())
-            .service(
-                web::scope(&root)
-                    .service(hello)
-            )
+            .service(web::scope(&root).service(hello))
     })
     .bind(binding)?
-    .run().await?;
+    .run()
+    .await?;
 
     Ok(())
 }
-
-
 
 /*
 pub async fn hello(cap: ReqData<Vec<Capability>>) -> impl Responder {

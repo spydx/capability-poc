@@ -1,4 +1,3 @@
-
 use serde::{Deserialize, Serialize};
 
 pub type KeyProof = String;

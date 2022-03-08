@@ -3,13 +3,11 @@
 //! All the models for both requesting grants and for responding to
 //! a grant request.
 //!
-use serde::{Deserialize, Serialize};
-use crate::serde_utils::deser_one_as_vec;
 use crate::models::interact::InteractRequest;
+use crate::serde_utils::deser_one_as_vec;
+use serde::{Deserialize, Serialize};
 
 use crate::models::access_token::AccessTokenRequest;
-
-
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "snake_case")]
@@ -31,7 +29,6 @@ pub struct SubjectRequest {
     pub assertions: Option<Vec<SubjectAssertionType>>,
 }
 
-
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged, rename_all = "lowercase")]
 pub enum GnapClientInstance {
@@ -51,7 +48,6 @@ pub struct GrantRequest {
     pub interact: Option<InteractRequest>,
 }
 
-
 impl GrantRequest {
     pub fn add_user(self, user: String) -> Self {
         Self {
@@ -63,19 +59,18 @@ impl GrantRequest {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ContinuationAccessToken {}
 
-
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct ContinuationRequest {
     pub interact_ref: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub interact: Option<InteractRequest>
+    pub interact: Option<InteractRequest>,
 }
 
 impl ContinuationRequest {
     pub fn create_with_ref(int_ref: String) -> Self {
         Self {
             interact_ref: int_ref,
-            interact: None
+            interact: None,
         }
     }
 }

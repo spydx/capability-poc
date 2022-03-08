@@ -14,7 +14,7 @@ impl Clone for Person {
         let l = self.lastname.to_string();
         Self {
             id : self.id.clone(),
-            firstname: f, 
+            firstname: f,
             lastname: l,
         }
     }
@@ -31,7 +31,7 @@ impl Capability<Person> {
     fn action(&self, mut list: Vec<Person>) -> Person {
         match self {
             Capability::Create(s) => {
-                let p = Person { 
+                let p = Person {
                     id: rand::random(),
                     firstname: s.firstname.to_owned(),
                     lastname: s.lastname.to_owned()
@@ -42,7 +42,7 @@ impl Capability<Person> {
             Capability::Read { id }=> { Person { id: *id, firstname: String::from("read"), lastname: String::from("Ready")}},
             Capability::Update(s) => {*s},
             Capability::Delete(s) => {*s},
-        } 
+        }
     }
 }
 

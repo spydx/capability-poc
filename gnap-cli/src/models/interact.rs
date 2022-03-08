@@ -1,5 +1,5 @@
-use serde::{Serialize, Deserialize};
 use crate::models::request::RequestContinuation;
+use serde::{Deserialize, Serialize};
 
 // 2.5.1 Start Mode Definitions
 // This specification defines the following interaction start modes as

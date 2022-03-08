@@ -1,3 +1,3 @@
 pub enum GnapError {
-    GeneralError
+    GeneralError,
 }

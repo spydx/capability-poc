@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, PartialEq, Eq, Clone, Debug)]
 #[serde(untagged)]
@@ -15,7 +15,6 @@ pub enum AccessRequest {
         data_types: Option<Vec<String>>,
     },
 }
-
 
 /// Access Token portion of a grant request.
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -94,7 +93,6 @@ pub struct AccessToken {
     //  attributes or behaviors of the access token issued by the AS.
     pub flags: Option<Vec<AccessTokenFlag>>,
 }
-
 
 /// AccessToken request flags.
 /// A set of flags that indicate desired

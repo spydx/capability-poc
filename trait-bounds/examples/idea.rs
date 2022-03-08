@@ -28,7 +28,7 @@ fn readBowlData<T:Read<Bowl<Box>> (T cap, Bowl<Box>) -> () {
 }
 
 readBowlData(bowl.caps.unwrap, bowl)
-*/ 
+*/
 #[allow(dead_code)]
 struct Bowl<T> {
     cap: T,
@@ -40,21 +40,19 @@ trait Read<T> {
 }
 
 #[allow(unused_variables)]
-fn create_readable_bowl(id: i64)  {
+fn create_readable_bowl(id: i64) {
     struct ReadBowl;
-    impl Read<Bowl<ReadBowl>> for Bowl::<ReadBowl> {
-    
-        fn read(&self) -> Bowl::<ReadBowl> {
+    impl Read<Bowl<ReadBowl>> for Bowl<ReadBowl> {
+        fn read(&self) -> Bowl<ReadBowl> {
             Bowl::<ReadBowl> {
                 id: self.id,
-                cap: ReadBowl
+                cap: ReadBowl,
             }
         }
     }
 }
 
-
-fn main () {
+fn main() {
     println!("Hello");
 
     let _r = create_readable_bowl(123);
