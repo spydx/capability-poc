@@ -1,3 +1,4 @@
+use actix_web::web::ReqData;
 use actix_web::{App, HttpServer, HttpResponse, Responder, Error, web, get, HttpMessage};
 use actix_web::dev::ServiceRequest;
 use actix_web_httpauth::extractors::bearer::BearerAuth;
@@ -6,6 +7,8 @@ use actix_web::middleware::Logger;
 use gnap_cli::introspect;
 use gnap_cli::models::access_token::AccessRequest;
 use log::debug;
+
+use capabilities::Capability;
 
 /*
     1. Needs to be a Beaer token.
@@ -26,25 +29,28 @@ async fn token_introspection(
     debug!("{:#?}", req);
 
     let token = header.token().to_string();
+    println!("{:#?}", token);
     let rs_ref = "e8a2968a-f183-45a3-b63d-4bbbd1dad276".to_string();
     let url = format!("{}", BASEPATH);
     
     match introspect(token, rs_ref, url).await {
         Ok(ir) =>  {
-            println!("{:#?}", ir);
             match ir.active {
                 true => {
-                    debug!("{:#?}", ir);
+                    //debug!("{:#?}", ir);
                     let access_req = ir.access.unwrap();
-                    let cap = match get_access_type(access_req.first().unwrap()) {
+                    let cap = match get_access_type(&access_req) {
                         Ok(cap) => cap,
                         Err(err) => return Err(err)
                     };
-                    req.extensions_mut().insert(cap)
+                    req.extensions_mut().insert(cap);
+                    println!("{:#?}", req);
                     Ok(req)
                 },
-                false => 
+                false => {
+                    println!("{:#?}", ir);
                     return Err(actix_web::error::ErrorForbidden("Inactive token"))
+                }
             }
         },
         Err(_) => {
@@ -56,30 +62,29 @@ async fn token_introspection(
     //Err(actix_web::error::ErrorForbidden("Invalid Request"))
 }
 
-use capabilities::Capability;
-use capabilities::Capability::Read;
 
 
-fn get_access_type(access: AccessRequest) -> Result<Capability, Error>{
-    match access {
-        AccessRequest::Value { actions, ..
-            } => {
-                for action in actions.unwrap() {
-                    let r = match action.as_str() {
-                        "read" => Some(Read),
-                        _ => None,
-                    };
-
-                    if r.is_some() {
-                        return Ok(r.unwrap())
-                    } else {
-                        return Err(actix_web::error::ErrorForbidden("Unknown access type"))
+fn get_access_type(access_list: &Vec<AccessRequest>) -> Result<Vec<Capability>, Error>{
+    let mut caps = vec![];
+    for access in access_list {
+        match access {
+            AccessRequest::Value { actions, ..
+                } => {
+                    for action in actions.clone().unwrap() {
+                        match action.as_str() {
+                            "read" => caps.push(Capability::Read),
+                            "create" => caps.push(Capability::Create),
+                            "write" => caps.push(Capability::Write),
+                            "update" => caps.push(Capability::Update),
+                            "delete" => caps.push(Capability::Delete),
+                            _ => {},
+                        }
                     }
-                }
-            },
-        _ => Err(actix_web::error::ErrorForbidden("Reference is invalid here")),
-        
+                },
+            _ => return Err(actix_web::error::ErrorForbidden("Unknown access type")),
+        }
     }
+    Ok(caps)
 }
 
 
@@ -111,6 +116,8 @@ async fn main() -> Result<(), std::io::Error> {
 
 
 #[get("/")]
-pub async fn hello() -> impl Responder {
+pub async fn hello(cap: ReqData<Vec<Capability>>) -> impl Responder {
+    let cap = cap.into_inner();
+    println!("Handler: {:#?}", cap);
     HttpResponse::Ok().body("hello from server")
 }
