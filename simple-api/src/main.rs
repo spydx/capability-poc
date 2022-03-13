@@ -115,6 +115,7 @@ pub async fn hello() -> impl Responder {
 pub async fn create_new_bowl(
     json: web::Json<BowlsDTO>,
     svc: web::Data<CapService>,
+    cap: Capability,
 ) -> impl Responder {
     let svc = svc.get_ref();
     let newbowl: Bowls = Bowls {
@@ -123,7 +124,7 @@ pub async fn create_new_bowl(
     };
 
     println!("{:#?}", newbowl);
-    let res_bowl = create_db_bowl(svc, newbowl).await;
+    let res_bowl = create_db_bowl(svc, newbowl, cap).await;
 
     match res_bowl {
         Ok(bowl) => HttpResponse::Ok().json(bowl),
@@ -132,7 +133,11 @@ pub async fn create_new_bowl(
 }
 
 #[get("/bowls/{id}")]
-pub async fn get_bowl(_bowl_id: web::Path<String>, svc: web::Data<CapService>) -> impl Responder {
+pub async fn get_bowl(
+    _bowl_id: web::Path<String>, 
+    svc: web::Data<CapService>,
+    _cap: Capability,
+) -> impl Responder {
     let _svc = svc.get_ref();
 
     HttpResponse::Ok().json("Not implemented")
@@ -150,6 +155,7 @@ pub async fn get_bowl(_bowl_id: web::Path<String>, svc: web::Data<CapService>) -
 pub async fn get_bowl_waterlevel(
     _bowl_id: web::Path<String>,
     _pool: web::Data<CapService>,
+    _cap: Capability,
 ) -> impl Responder {
     HttpResponse::Ok().body("Not Implemented")
 }
@@ -159,6 +165,7 @@ pub async fn add_bowl_waterlevel(
     _bowl_id: web::Path<String>,
     _json: web::Form<WaterlevelsDTO>,
     _pool: web::Data<CapService>,
+    _cap: Capability,
 ) -> impl Responder {
     HttpResponse::Ok().body("Not Implemented")
 }
