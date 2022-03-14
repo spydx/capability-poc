@@ -1,7 +1,7 @@
 use actix_web::middleware::Logger;
 use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
 use actix_web_httpauth::middleware::HttpAuthentication;
-use capabilities::Capability;
+use capabilities::{Capability, FilterConfig};
 
 /*
     1. Needs to be a Beaer token.
@@ -18,10 +18,14 @@ async fn main() -> Result<(), std::io::Error> {
     let binding = "0.0.0.0:8080";
 
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("debug"));
+    let basepath = "http://localhost:8080/gnap/".to_string();
+    let rs_ref = "e8a2968a-f183-45a3-b63d-4bbbd1dad276".to_string();
+    let filter_config = FilterConfig::build(basepath, rs_ref);
 
     let bearer_auth = HttpAuthentication::bearer(capabilities::token_introspection);
     HttpServer::new(move || {
         App::new()
+            .app_data(filter_config.clone())
             .wrap(bearer_auth.clone())
             .wrap(Logger::default())
             .service(web::scope(&root).service(hello))
