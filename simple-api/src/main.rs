@@ -274,8 +274,8 @@ pub fn get_db_all_waterlevels() -> Result<Vec<Waterlevels>, CapServiceError> {
 #[capability(Delete, Waterlevels)]
 pub fn delete_db_waterlevel(waterlevel: Waterlevels) -> Result<(), CapServiceError> {
     match sqlx::query!(
-        r#"DELETE FROM waterlevels WHERE date = $1"#,
-        waterlevel.date
+        r#"DELETE FROM waterlevels WHERE id = $1"#,
+        waterlevel.id
     )
     .execute(&self.db)
     .await {
