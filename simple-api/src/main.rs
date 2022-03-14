@@ -4,7 +4,7 @@ use actix_web::{get, post, App, HttpResponse, HttpServer, Responder};
 #[allow(unused_imports)]
 use actix_web_httpauth::middleware::HttpAuthentication;
 use capabilities::capabilities_derive::capabilities;
-use capabilities::{capability, FilterConfig, token_introspection};
+use capabilities::{capability, token_introspection};
 use capabilities::service;
 use capabilities::SqliteDb;
 #[allow(unused_imports)]
@@ -12,6 +12,8 @@ use capabilities::{Create, Delete, DeleteAll, Read, ReadAll, Update, UpdateAll};
 use chrono::{serde::ts_seconds, NaiveDateTime, TimeZone, Utc};
 use serde::Serializer;
 use serde::{Deserialize, Serialize};
+use gnap_cli::GnapClient;
+
 /*
     DTO - Data Transfere Objects
     Insecure by default
@@ -80,12 +82,12 @@ async fn main() -> Result<(), std::io::Error> {
 
     let rs_ref = "e8a2968a-f183-45a3-b63d-4bbbd1dad276".to_string();
     let basepath = "http://localhost:8000/gnap".to_string();
-    let token_config = FilterConfig::build(basepath, rs_ref);
+    let gnap_client = GnapClient::build(basepath, rs_ref);
 
     let bearer_auth = HttpAuthentication::bearer(token_introspection);
     HttpServer::new(move || {
         App::new()
-            .app_data(token_config.clone())
+            .app_data(gnap_client.clone())
             .wrap(bearer_auth.clone())
             .wrap(Logger::default())
             .service(
