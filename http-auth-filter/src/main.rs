@@ -1,7 +1,7 @@
 use actix_web::middleware::Logger;
 use actix_web::{get, web, App, HttpResponse, HttpServer, Responder};
 use actix_web_httpauth::middleware::HttpAuthentication;
-use capabilities::{Capability};
+use capabilities::Capability;
 use gnap_cli::GnapClient;
 
 /*

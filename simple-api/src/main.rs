@@ -4,15 +4,15 @@ use actix_web::{get, post, App, HttpResponse, HttpServer, Responder};
 #[allow(unused_imports)]
 use actix_web_httpauth::middleware::HttpAuthentication;
 use capabilities::capabilities_derive::capabilities;
-use capabilities::{capability, token_introspection};
 use capabilities::service;
 use capabilities::SqliteDb;
+use capabilities::{capability, token_introspection};
 #[allow(unused_imports)]
 use capabilities::{Create, Delete, DeleteAll, Read, ReadAll, Update, UpdateAll};
 use chrono::{serde::ts_seconds, NaiveDateTime, TimeZone, Utc};
+use gnap_cli::GnapClient;
 use serde::Serializer;
 use serde::{Deserialize, Serialize};
-use gnap_cli::GnapClient;
 
 /*
     DTO - Data Transfere Objects
@@ -137,7 +137,7 @@ pub async fn create_new_bowl(
 
 #[get("/bowls/{id}")]
 pub async fn get_bowl(
-    bowl_id: web::Path<String>, 
+    bowl_id: web::Path<String>,
     svc: web::Data<CapService>,
     cap: Capability,
 ) -> impl Responder {
@@ -145,12 +145,13 @@ pub async fn get_bowl(
 
     let id = bowl_id.into_inner();
 
-    let name = BowlsId { id: id.parse::<i64>().unwrap()};
-    match read_db_bowl_by_id(svc,name, cap).await {
+    let name = BowlsId {
+        id: id.parse::<i64>().unwrap(),
+    };
+    match read_db_bowl_by_id(svc, name, cap).await {
         Ok(bowl) => HttpResponse::Ok().json(bowl),
-        _ => HttpResponse::NoContent().json("{ msg : no content } ")
+        _ => HttpResponse::NoContent().json("{ msg : no content } "),
     }
-    
 }
 
 #[get("/bowls/waterlevels/{id}")]
@@ -198,9 +199,10 @@ pub fn create_db_bowl(bowl: Bowls) -> Result<Bowls, CapServiceError> {
 pub fn delete_db_bowl(bowl: Bowls) -> Result<(), CapServiceError> {
     match sqlx::query!(r#"DELETE FROM bowls WHERE name = $1"#, bowl.name)
         .execute(&self.db)
-        .await {
-             Ok(_) => Ok(()),
-             Err(_) => Err(CapServiceError),
+        .await
+    {
+        Ok(_) => Ok(()),
+        Err(_) => Err(CapServiceError),
     }
 }
 
@@ -209,10 +211,10 @@ pub fn delete_db_bowl_by_id(bowl_id: BowlsId) -> Result<(), CapServiceError> {
     match sqlx::query!(r#"DELETE FROM bowls WHERE id = $1"#, bowl_id.id)
         .execute(&self.db)
         .await
-        {
-            Ok(_) => Ok(()),
-            Err(_) => Err(CapServiceError),
-        }
+    {
+        Ok(_) => Ok(()),
+        Err(_) => Err(CapServiceError),
+    }
 }
 
 #[capability(Create, Waterlevels)]
@@ -275,14 +277,12 @@ pub fn get_db_all_waterlevels() -> Result<Vec<Waterlevels>, CapServiceError> {
 
 #[capability(Delete, Waterlevels)]
 pub fn delete_db_waterlevel(waterlevel: Waterlevels) -> Result<(), CapServiceError> {
-    match sqlx::query!(
-        r#"DELETE FROM waterlevels WHERE id = $1"#,
-        waterlevel.id
-    )
-    .execute(&self.db)
-    .await {
+    match sqlx::query!(r#"DELETE FROM waterlevels WHERE id = $1"#, waterlevel.id)
+        .execute(&self.db)
+        .await
+    {
         Ok(_) => Ok(()),
-        Err(_) => Err(CapServiceError)
+        Err(_) => Err(CapServiceError),
     }
 }
 
@@ -290,17 +290,16 @@ pub fn delete_db_waterlevel(waterlevel: Waterlevels) -> Result<(), CapServiceErr
 pub fn delete_db_waterlevel_by_id(waterlevel: WaterlevelsId) -> Result<(), CapServiceError> {
     match sqlx::query!(r#"DELETE FROM waterlevels WHERE id = $1"#, waterlevel.id)
         .execute(&self.db)
-        .await {
-            Ok(_) => Ok(()),
-            Err(_) => Err(CapServiceError)
-        }
+        .await
+    {
+        Ok(_) => Ok(()),
+        Err(_) => Err(CapServiceError),
+    }
 }
-
 
 #[capability(Read, Bowls, id = "i64")]
 pub fn read_db_bowl_by_id(bowl_id: BowlsId) -> Result<Bowls, CapServiceError> {
-    let b = sqlx::query_as!(Bowls, r#"SELECT * FROM bowls WHERE name = $1"#,
-        bowl_id.id)
+    let b = sqlx::query_as!(Bowls, r#"SELECT * FROM bowls WHERE name = $1"#, bowl_id.id)
         .fetch_one(&self.db)
         .await
         .expect("Failed to get a bowl");
@@ -308,11 +307,9 @@ pub fn read_db_bowl_by_id(bowl_id: BowlsId) -> Result<Bowls, CapServiceError> {
     Ok(b)
 }
 
-
 #[capability(Read, Bowls)]
 pub fn read_db_bowl(bowl: Bowls) -> Result<Bowls, CapServiceError> {
-    let b = sqlx::query_as!(Bowls, r#"SELECT * FROM bowls WHERE name = $1"#,
-        bowl.name)
+    let b = sqlx::query_as!(Bowls, r#"SELECT * FROM bowls WHERE name = $1"#, bowl.name)
         .fetch_one(&self.db)
         .await
         .expect("Failed to get a bowl");

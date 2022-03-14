@@ -16,14 +16,16 @@ pub struct GnapClient {
     pub client: Client,
 }
 
-
-impl  GnapClient {
+impl GnapClient {
     pub fn build(as_host: String, rs_ref: String) -> Self {
-        let c = reqwest::Client::builder().timeout(Duration::from_secs(2)).build().unwrap();
+        let c = reqwest::Client::builder()
+            .timeout(Duration::from_secs(2))
+            .build()
+            .unwrap();
         Self {
             basepath: as_host,
             rs_ref: rs_ref,
-            client:c,
+            client: c,
         }
     }
 
@@ -39,12 +41,7 @@ impl  GnapClient {
     pub async fn discover(&self) -> Result<GnapOptions, Box<dyn StdError>> {
         let path = self.as_path(Some(".well-known/gnap-as-rs".to_string()));
         debug!("Using path: {}", &path);
-        let response: GnapOptions = self.client
-            .get(&path)
-            .send()
-            .await?
-            .json()
-            .await?;
+        let response: GnapOptions = self.client.get(&path).send().await?.json().await?;
         debug!("Options: {:#?}", &response);
         Ok(response)
     }
@@ -55,27 +52,26 @@ impl  GnapClient {
     ) -> Result<InstrospectResponse, Box<dyn StdError>> {
         let path = self.as_path(Some("introspect".to_string()));
         debug!("Using path: {}", path);
-    
+
         let ir = IntrospectRequest {
             access_token: token.to_owned(),
             proof: Some(String::from("jwks")),
             resource_server: self.rs_ref.to_owned(),
             access: None,
         };
-    
-        let response = self.client
+
+        let response = self
+            .client
             .post(&path)
             .json(&ir)
             .send()
             .await?
             .json()
             .await?;
-    
+
         Ok(response)
     }
 }
-
-
 
 /*
     1. Discovery
@@ -94,6 +90,5 @@ mod tests {
         let options = gnap_cli.discover().await.unwrap();
 
         println!("{:#?}", options);
-
     }
 }
