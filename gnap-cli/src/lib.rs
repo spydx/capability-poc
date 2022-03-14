@@ -24,7 +24,7 @@ impl GnapClient {
             .unwrap();
         Self {
             basepath: as_host,
-            rs_ref: rs_ref,
+            rs_ref,
             client: c,
         }
     }
@@ -34,7 +34,7 @@ impl GnapClient {
         if part.is_some() {
             format!("{}/{}", url, part.unwrap())
         } else {
-            format!("{}", url)
+            url
         }
     }
 

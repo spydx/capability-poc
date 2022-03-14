@@ -29,7 +29,7 @@ async fn main() -> Result<(), std::io::Error> {
             .app_data(gnap_client.clone())
             .wrap(bearer_auth.clone())
             .wrap(Logger::default())
-            .service(web::scope(&root).service(hello))
+            .service(web::scope(root).service(hello))
     })
     .bind(binding)?
     .run()

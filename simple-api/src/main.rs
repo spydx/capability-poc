@@ -37,14 +37,14 @@ pub struct WaterlevelsDTO {
 */
 #[capabilities(Create, Read, Delete, id = "id")]
 #[derive(Serialize, Debug)]
-pub struct Bowls {
+pub struct Bowl {
     id: i64,
     name: String,
 }
 
 #[capabilities(Create, Read, Delete, ReadAll, id = "id")]
 #[derive(Debug, Deserialize, Serialize)]
-pub struct Waterlevels {
+pub struct Waterlevel {
     #[warn(dead_code)]
     id: i64,
     #[serde(serialize_with = "serialize_dt")]
@@ -123,7 +123,7 @@ pub async fn create_new_bowl(
     cap: Capability,
 ) -> impl Responder {
     let svc = svc.get_ref();
-    let newbowl: Bowls = Bowls {
+    let newbowl: Bowl = Bowl {
         id: 0,
         name: json.name.to_owned(),
     };
@@ -145,10 +145,10 @@ pub async fn get_bowl(
 
     let id = bowl_id.into_inner();
 
-    let name = BowlsId {
+    let bowl_id = Bowl {
         id: id.parse::<i64>().unwrap(),
     };
-    match read_db_bowl_by_id(svc, name, cap).await {
+    match read_db_bowl_by_id(svc, bowl_id, cap).await {
         Ok(bowl) => HttpResponse::Ok().json(bowl),
         _ => HttpResponse::NoContent().json("{ msg : no content } "),
     }
@@ -156,10 +156,13 @@ pub async fn get_bowl(
 
 #[get("/bowls/waterlevels/{id}")]
 pub async fn get_bowl_waterlevel(
-    _bowl_id: web::Path<String>,
-    _pool: web::Data<CapService>,
-    _cap: Capability,
+    bowl_id: web::Path<String>,
+    svc: web::Data<CapService>,
+    cap: Capability,
 ) -> impl Responder {
+
+    let svc = svc.get_ref();
+    
     HttpResponse::Ok().body("Not Implemented")
 }
 
@@ -174,20 +177,25 @@ pub async fn add_bowl_waterlevel(
 }
 
 #[get("/bowls/waterlevels/")]
-pub async fn get_all_waterlevels(_pool: web::Data<CapService>) -> impl Responder {
+pub async fn get_all_waterlevels(svc: web::Data<CapService>, cap: Capability) -> impl Responder {
+    let svc = svc.get_ref();
+    match read_db_all_waterlevels(cap).await {
+        Ok(d) => HttpResponse::Ok().json(d),
+        _ => HttpResponse::Forbidden()
+    }
     HttpResponse::Ok().body("Not Implemented")
 }
 
 /*
     Service layer, storing data in database.
 */
-#[capability(Create, Bowls)]
-pub fn create_db_bowl(bowl: Bowls) -> Result<Bowls, CapServiceError> {
+#[capability(Create, Bowl)]
+pub fn create_db_bowl(bowl: Bowl) -> Result<Bowl, CapServiceError> {
     let _res = sqlx::query!(r#"INSERT INTO bowls (name) VALUES ($1)"#, bowl.name)
         .execute(&self.db)
         .await
         .expect("unable to create bowl");
-    let b = sqlx::query_as!(Bowls, r#"SELECT * FROM bowls WHERE name = $1"#, bowl.name)
+    let b = sqlx::query_as!(Bowl, r#"SELECT * FROM bowls WHERE name = $1"#, bowl.name)
         .fetch_one(&self.db)
         .await
         .expect("Didn't fint any bowls");
@@ -195,8 +203,8 @@ pub fn create_db_bowl(bowl: Bowls) -> Result<Bowls, CapServiceError> {
     Ok(b)
 }
 
-#[capability(Delete, Bowls)]
-pub fn delete_db_bowl(bowl: Bowls) -> Result<(), CapServiceError> {
+#[capability(Delete, Bowl)]
+pub fn delete_db_bowl(bowl: Bowl) -> Result<(), CapServiceError> {
     match sqlx::query!(r#"DELETE FROM bowls WHERE name = $1"#, bowl.name)
         .execute(&self.db)
         .await
@@ -206,8 +214,8 @@ pub fn delete_db_bowl(bowl: Bowls) -> Result<(), CapServiceError> {
     }
 }
 
-#[capability(Delete, Bowls, id = "i64")]
-pub fn delete_db_bowl_by_id(bowl_id: BowlsId) -> Result<(), CapServiceError> {
+#[capability(Delete, Bowl, id = "i64")]
+pub fn delete_db_bowl_by_id(bowl_id: Bowl) -> Result<(), CapServiceError> {
     match sqlx::query!(r#"DELETE FROM bowls WHERE id = $1"#, bowl_id.id)
         .execute(&self.db)
         .await
@@ -217,8 +225,8 @@ pub fn delete_db_bowl_by_id(bowl_id: BowlsId) -> Result<(), CapServiceError> {
     }
 }
 
-#[capability(Create, Waterlevels)]
-pub fn create_db_waterlevels(waterlevel: Waterlevels) -> Result<Waterlevels, CapServiceError> {
+#[capability(Create, Waterlevel)]
+pub fn create_db_waterlevels(waterlevel: Waterlevel) -> Result<Waterlevel, CapServiceError> {
     sqlx::query!(
         "INSERT INTO waterlevels (id, date, waterlevel) VALUES ($1, $2, $3)",
         waterlevel.id,
@@ -231,12 +239,12 @@ pub fn create_db_waterlevels(waterlevel: Waterlevels) -> Result<Waterlevels, Cap
     Ok(waterlevel)
 }
 
-#[capability(Read, Waterlevels, id = "i64")]
+#[capability(Read, Waterlevel, id = "i64")]
 pub fn get_db_waterlevel_by_id(
-    waterlevel_id: WaterlevelsId,
-) -> Result<Waterlevels, CapServiceError> {
+    waterlevel_id: Waterlevel,
+) -> Result<Waterlevel, CapServiceError> {
     let waterlevel = sqlx::query_as!(
-        Waterlevels,
+        Waterlevel,
         r#"SELECT * FROM waterlevels WHERE id = $1"#,
         waterlevel_id.id
     )
@@ -251,10 +259,10 @@ pub fn get_db_waterlevel_by_id(
     Ok(Waterlevels { id: waterlevel_id.id, date: Some(nt), waterlevel: 78})*/
 }
 
-#[capability(Read, Waterlevels)]
-pub fn get_db_waterlevel(waterlevel: Waterlevels) -> Result<Waterlevels, CapServiceError> {
+#[capability(Read, Waterlevel)]
+pub fn get_db_waterlevel(waterlevel: Waterlevel) -> Result<Waterlevel, CapServiceError> {
     let bowl = sqlx::query_as!(
-        Waterlevels,
+        Waterlevel,
         r#"SELECT * FROM waterlevels WHERE date = $1"#,
         waterlevel.date
     )
@@ -264,10 +272,10 @@ pub fn get_db_waterlevel(waterlevel: Waterlevels) -> Result<Waterlevels, CapServ
     Ok(bowl)
 }
 
-#[capability(ReadAll, Waterlevels)]
-pub fn get_db_all_waterlevels() -> Result<Vec<Waterlevels>, CapServiceError> {
-    let waterlevels: Vec<Waterlevels> =
-        sqlx::query_as!(Waterlevels, r#"SELECT * FROM waterlevels"#)
+#[capability(ReadAll, Waterlevel)]
+pub fn read_db_all_waterlevels() -> Result<Vec<Waterlevel>, CapServiceError> {
+    let waterlevels: Vec<Waterlevel> =
+        sqlx::query_as!(Waterlevel, r#"SELECT * FROM waterlevels"#)
             .fetch_all(&self.db)
             .await
             .expect("Failed to query database for all bowls");
@@ -275,8 +283,8 @@ pub fn get_db_all_waterlevels() -> Result<Vec<Waterlevels>, CapServiceError> {
     Ok(waterlevels)
 }
 
-#[capability(Delete, Waterlevels)]
-pub fn delete_db_waterlevel(waterlevel: Waterlevels) -> Result<(), CapServiceError> {
+#[capability(Delete, Waterlevel)]
+pub fn delete_db_waterlevel(waterlevel: Waterlevel) -> Result<(), CapServiceError> {
     match sqlx::query!(r#"DELETE FROM waterlevels WHERE id = $1"#, waterlevel.id)
         .execute(&self.db)
         .await
@@ -286,8 +294,8 @@ pub fn delete_db_waterlevel(waterlevel: Waterlevels) -> Result<(), CapServiceErr
     }
 }
 
-#[capability(Delete, Waterlevels, id = "DateTime")]
-pub fn delete_db_waterlevel_by_id(waterlevel: WaterlevelsId) -> Result<(), CapServiceError> {
+#[capability(Delete, Waterlevel, id = "DateTime")]
+pub fn delete_db_waterlevel_by_id(waterlevel: Waterlevel) -> Result<(), CapServiceError> {
     match sqlx::query!(r#"DELETE FROM waterlevels WHERE id = $1"#, waterlevel.id)
         .execute(&self.db)
         .await
@@ -297,9 +305,9 @@ pub fn delete_db_waterlevel_by_id(waterlevel: WaterlevelsId) -> Result<(), CapSe
     }
 }
 
-#[capability(Read, Bowls, id = "i64")]
-pub fn read_db_bowl_by_id(bowl_id: BowlsId) -> Result<Bowls, CapServiceError> {
-    let b = sqlx::query_as!(Bowls, r#"SELECT * FROM bowls WHERE name = $1"#, bowl_id.id)
+#[capability(Read, Bowl, id = "i64")]
+pub fn read_db_bowl_by_id(bowl_id: Bowl) -> Result<Bowl, CapServiceError> {
+    let b = sqlx::query_as!(Bowl, r#"SELECT * FROM bowls WHERE name = $1"#, bowl_id.id)
         .fetch_one(&self.db)
         .await
         .expect("Failed to get a bowl");
@@ -307,9 +315,9 @@ pub fn read_db_bowl_by_id(bowl_id: BowlsId) -> Result<Bowls, CapServiceError> {
     Ok(b)
 }
 
-#[capability(Read, Bowls)]
-pub fn read_db_bowl(bowl: Bowls) -> Result<Bowls, CapServiceError> {
-    let b = sqlx::query_as!(Bowls, r#"SELECT * FROM bowls WHERE name = $1"#, bowl.name)
+#[capability(Read, Bowl)]
+pub fn read_db_bowl(bowl: Bowl) -> Result<Bowl, CapServiceError> {
+    let b = sqlx::query_as!(Bowl, r#"SELECT * FROM bowls WHERE name = $1"#, bowl.name)
         .fetch_one(&self.db)
         .await
         .expect("Failed to get a bowl");

@@ -25,3 +25,9 @@ impl GrantResponse {
         }
     }
 }
+
+impl Default for GrantResponse {
+    fn default() -> Self {
+        Self::new()
+    }
+}

@@ -44,6 +44,12 @@ impl AccessTokenRequest {
     }
 }
 
+impl Default for AccessTokenRequest {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AccessToken {
     // The value of the access token as a string.
