@@ -91,7 +91,7 @@ async fn main() -> Result<(), std::io::Error> {
             .wrap(bearer_auth.clone())
             .wrap(Logger::default())
             .service(
-                web::scope(&root)
+                web::scope(root)
                     .service(hello)
                     .service(create_new_bowl)
                     .service(get_bowl)
@@ -145,7 +145,7 @@ pub async fn get_bowl(
 
     let id = bowl_id.into_inner();
 
-    let bowl_id = Bowl {
+    let bowl_id = BowlId {
         id: id.parse::<i64>().unwrap(),
     };
     match read_db_bowl_by_id(svc, bowl_id, cap).await {
@@ -156,12 +156,12 @@ pub async fn get_bowl(
 
 #[get("/bowls/waterlevels/{id}")]
 pub async fn get_bowl_waterlevel(
-    bowl_id: web::Path<String>,
+    _bowl_id: web::Path<String>,
     svc: web::Data<CapService>,
-    cap: Capability,
+    _cap: Capability,
 ) -> impl Responder {
 
-    let svc = svc.get_ref();
+    let _svc = svc.get_ref();
     
     HttpResponse::Ok().body("Not Implemented")
 }
@@ -179,11 +179,10 @@ pub async fn add_bowl_waterlevel(
 #[get("/bowls/waterlevels/")]
 pub async fn get_all_waterlevels(svc: web::Data<CapService>, cap: Capability) -> impl Responder {
     let svc = svc.get_ref();
-    match read_db_all_waterlevels(cap).await {
+    match read_db_all_waterlevels(svc, cap).await {
         Ok(d) => HttpResponse::Ok().json(d),
-        _ => HttpResponse::Forbidden()
+        _ => HttpResponse::Forbidden().body("no access")
     }
-    HttpResponse::Ok().body("Not Implemented")
 }
 
 /*
@@ -241,7 +240,7 @@ pub fn create_db_waterlevels(waterlevel: Waterlevel) -> Result<Waterlevel, CapSe
 
 #[capability(Read, Waterlevel, id = "i64")]
 pub fn get_db_waterlevel_by_id(
-    waterlevel_id: Waterlevel,
+    waterlevel_id: WaterlevelId,
 ) -> Result<Waterlevel, CapServiceError> {
     let waterlevel = sqlx::query_as!(
         Waterlevel,
@@ -250,7 +249,9 @@ pub fn get_db_waterlevel_by_id(
     )
     .fetch_one(&self.db)
     .await
-    .expect(format!("Failed to fetch bowl with id: {}", waterlevel_id.id).as_str());
+    .unwrap_or_else(|_| 
+        panic!("Failed to fetch bowl with id: {}", waterlevel_id.id)    
+    );
 
     Ok(waterlevel)
     /*let time = Utc::now().to_string();
@@ -268,7 +269,7 @@ pub fn get_db_waterlevel(waterlevel: Waterlevel) -> Result<Waterlevel, CapServic
     )
     .fetch_one(&self.db)
     .await
-    .expect(format!("Failed to fetch bowl with id: {}", waterlevel.id).as_str());
+    .unwrap_or_else(|_| panic!("Failed to fetch bowl with id: {}", waterlevel.id));
     Ok(bowl)
 }
 
@@ -306,7 +307,7 @@ pub fn delete_db_waterlevel_by_id(waterlevel: Waterlevel) -> Result<(), CapServi
 }
 
 #[capability(Read, Bowl, id = "i64")]
-pub fn read_db_bowl_by_id(bowl_id: Bowl) -> Result<Bowl, CapServiceError> {
+pub fn read_db_bowl_by_id(bowl_id: BowlId) -> Result<Bowl, CapServiceError> {
     let b = sqlx::query_as!(Bowl, r#"SELECT * FROM bowls WHERE name = $1"#, bowl_id.id)
         .fetch_one(&self.db)
         .await
