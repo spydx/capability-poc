@@ -4,7 +4,7 @@ use actix_web::{get, post, App, HttpResponse, HttpServer, Responder};
 #[allow(unused_imports)]
 use actix_web_httpauth::middleware::HttpAuthentication;
 use capabilities::capabilities_derive::capabilities;
-use capabilities::capability;
+use capabilities::{capability, FilterConfig, token_introspection};
 use capabilities::service;
 use capabilities::SqliteDb;
 #[allow(unused_imports)]
@@ -12,8 +12,6 @@ use capabilities::{Create, Delete, DeleteAll, Read, ReadAll, Update, UpdateAll};
 use chrono::{serde::ts_seconds, NaiveDateTime, TimeZone, Utc};
 use serde::Serializer;
 use serde::{Deserialize, Serialize};
-pub mod filter;
-
 /*
     DTO - Data Transfere Objects
     Insecure by default
@@ -80,9 +78,14 @@ async fn main() -> Result<(), std::io::Error> {
         .await
         .expect("Failed to run sql mig on database");
 
-    let bearer_auth = HttpAuthentication::bearer(filter::token_introspection);
+    let rs_ref = "e8a2968a-f183-45a3-b63d-4bbbd1dad276".to_string();
+    let basepath = "http://localhost:8000/gnap".to_string();
+    let token_config = FilterConfig::build(basepath, rs_ref);
+
+    let bearer_auth = HttpAuthentication::bearer(token_introspection);
     HttpServer::new(move || {
         App::new()
+            .app_data(token_config.clone())
             .wrap(bearer_auth.clone())
             .wrap(Logger::default())
             .service(
@@ -124,9 +127,7 @@ pub async fn create_new_bowl(
     };
 
     println!("{:#?}", newbowl);
-    let res_bowl = create_db_bowl(svc, newbowl, cap).await;
-
-    match res_bowl {
+    match create_db_bowl(svc, newbowl, cap).await {
         Ok(bowl) => HttpResponse::Ok().json(bowl),
         _ => HttpResponse::BadRequest().json("{ \"request\": \"bad request\" "),
     }
@@ -134,21 +135,20 @@ pub async fn create_new_bowl(
 
 #[get("/bowls/{id}")]
 pub async fn get_bowl(
-    _bowl_id: web::Path<String>, 
+    bowl_id: web::Path<String>, 
     svc: web::Data<CapService>,
-    _cap: Capability,
+    cap: Capability,
 ) -> impl Responder {
-    let _svc = svc.get_ref();
+    let svc = svc.get_ref();
 
-    HttpResponse::Ok().json("Not implemented")
-    /*let name = BowlsId { id: bowl_id.as_str().to_string()};
-    let res_bowl = read_db_bowl_by_id(svc,name, cap).await;
+    let id = bowl_id.into_inner();
 
-    match res_bowl {
+    let name = BowlsId { id: id.parse::<i64>().unwrap()};
+    match read_db_bowl_by_id(svc,name, cap).await {
         Ok(bowl) => HttpResponse::Ok().json(bowl),
         _ => HttpResponse::NoContent().json("{ msg : no content } ")
     }
-    */
+    
 }
 
 #[get("/bowls/waterlevels/{id}")]
