@@ -35,7 +35,7 @@ pub struct WaterlevelsDTO {
 /*
    Capability structs
 */
-#[capabilities(Create, Delete, id = "id")]
+#[capabilities(Create, Read, Delete, id = "id")]
 #[derive(Serialize, Debug)]
 pub struct Bowls {
     id: i64,
@@ -142,7 +142,7 @@ pub async fn get_bowl(
 
     HttpResponse::Ok().json("Not implemented")
     /*let name = BowlsId { id: bowl_id.as_str().to_string()};
-    let res_bowl = read_db_bowl_by_id(svc,name ).await;
+    let res_bowl = read_db_bowl_by_id(svc,name, cap).await;
 
     match res_bowl {
         Ok(bowl) => HttpResponse::Ok().json(bowl),
@@ -294,11 +294,11 @@ pub fn delete_db_waterlevel_by_id(waterlevel: WaterlevelsId) -> Result<(), CapSe
         }
 }
 
-/*
+
 #[capability(Read, Bowls, id = "i64")]
-pub fn read_db_bowl_by_id(bowl_id: i64) -> Result<Bowls, CapServiceError> {
+pub fn read_db_bowl_by_id(bowl_id: BowlsId) -> Result<Bowls, CapServiceError> {
     let b = sqlx::query_as!(Bowls, r#"SELECT * FROM bowls WHERE name = $1"#,
-        bowl_id)
+        bowl_id.id)
         .fetch_one(&self.db)
         .await
         .expect("Failed to get a bowl");
@@ -317,4 +317,3 @@ pub fn read_db_bowl(bowl: Bowls) -> Result<Bowls, CapServiceError> {
 
     Ok(b)
 }
-*/
