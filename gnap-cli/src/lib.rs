@@ -11,9 +11,9 @@ pub mod serde_utils;
 
 #[derive(Clone)]
 pub struct GnapClient {
-    pub basepath: String,
-    pub rs_ref: String,
-    pub client: Client,
+    basepath: String,
+    rs_ref: String,
+    client: Client,
 }
 
 impl GnapClient {
