@@ -69,3 +69,5 @@ Cargo.lock
 # Support for Project snippet scope
 
 # End of https://www.toptal.com/developers/gitignore/api/rust,visualstudiocode,macos
+
+./cap-client/node_modules/
