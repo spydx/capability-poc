@@ -22,16 +22,13 @@ use serde::{Deserialize, Serialize};
 pub struct BowlsDTO {
     name: String,
 }
-
 #[derive(Deserialize)]
-
 pub struct WaterlevelsDTO {
     #[allow(dead_code)] //TODO: remove once this is used.
     id: i64,
     #[allow(dead_code)] //TODO: remove once this is used.
     waterlevel: i64,
 }
-
 /*
    Capability structs
 */
@@ -45,8 +42,8 @@ pub struct Bowl {
 #[capabilities(Create, Read, Delete, ReadAll, id = "id")]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Waterlevel {
-    #[warn(dead_code)]
     id: i64,
+    bowl_id: i64,
     #[serde(serialize_with = "serialize_dt")]
     date: Option<NaiveDateTime>,
     waterlevel: i64,
@@ -168,12 +165,30 @@ pub async fn get_bowl_waterlevel(
 
 #[post("/bowls/waterlevels/{id}")]
 pub async fn add_bowl_waterlevel(
-    _bowl_id: web::Path<String>,
-    _json: web::Form<WaterlevelsDTO>,
-    _pool: web::Data<CapService>,
-    _cap: Capability,
+    bowl_id: web::Path<String>,
+    json: web::Form<WaterlevelsDTO>,
+    svc: web::Data<CapService>,
+    cap: Capability,
 ) -> impl Responder {
-    HttpResponse::Ok().body("Not Implemented")
+    let svc = svc.get_ref();
+
+    let bowl_id = bowl_id.parse::<i64>().unwrap();
+    let json = json.into_inner();
+    let date: NaiveDateTime = Utc::now().naive_utc();
+    
+    let waterlevel = Waterlevel {
+        id:  0,
+        bowl_id: bowl_id,
+        waterlevel: json.waterlevel,
+        date: Some(date)
+    };
+    match create_db_waterlevels(svc, waterlevel, cap).await {
+        Ok(d) => HttpResponse::Ok().json(d),
+        _ => HttpResponse::BadRequest().body("malformed request")
+    }
+
+
+    //HttpResponse::Ok().body("Not Implemented")
 }
 
 #[get("/bowls/waterlevels/")]
@@ -227,8 +242,8 @@ pub fn delete_db_bowl_by_id(bowl_id: Bowl) -> Result<(), CapServiceError> {
 #[capability(Create, Waterlevel)]
 pub fn create_db_waterlevels(waterlevel: Waterlevel) -> Result<Waterlevel, CapServiceError> {
     sqlx::query!(
-        "INSERT INTO waterlevels (id, date, waterlevel) VALUES ($1, $2, $3)",
-        waterlevel.id,
+        "INSERT INTO waterlevels (bowl_id, date, waterlevel) VALUES ($1, $2, $3)",
+        waterlevel.bowl_id,
         waterlevel.date,
         waterlevel.waterlevel
     )
@@ -244,7 +259,7 @@ pub fn get_db_waterlevel_by_id(
 ) -> Result<Waterlevel, CapServiceError> {
     let waterlevel = sqlx::query_as!(
         Waterlevel,
-        r#"SELECT * FROM waterlevels WHERE id = $1"#,
+        r#"SELECT * FROM waterlevels WHERE bowl_id = $1"#,
         waterlevel_id.id
     )
     .fetch_one(&self.db)
@@ -254,18 +269,14 @@ pub fn get_db_waterlevel_by_id(
     );
 
     Ok(waterlevel)
-    /*let time = Utc::now().to_string();
-    let nt = NaiveDateTime::parse_from_str(&time, "%m-%d-%Y %H:%M:%S").expect("parsed not ok");
-
-    Ok(Waterlevels { id: waterlevel_id.id, date: Some(nt), waterlevel: 78})*/
 }
 
 #[capability(Read, Waterlevel)]
 pub fn get_db_waterlevel(waterlevel: Waterlevel) -> Result<Waterlevel, CapServiceError> {
     let bowl = sqlx::query_as!(
         Waterlevel,
-        r#"SELECT * FROM waterlevels WHERE date = $1"#,
-        waterlevel.date
+        r#"SELECT * FROM waterlevels WHERE id = $1"#,
+        waterlevel.id
     )
     .fetch_one(&self.db)
     .await
@@ -308,7 +319,7 @@ pub fn delete_db_waterlevel_by_id(waterlevel: Waterlevel) -> Result<(), CapServi
 
 #[capability(Read, Bowl, id = "i64")]
 pub fn read_db_bowl_by_id(bowl_id: BowlId) -> Result<Bowl, CapServiceError> {
-    let b = sqlx::query_as!(Bowl, r#"SELECT * FROM bowls WHERE name = $1"#, bowl_id.id)
+    let b = sqlx::query_as!(Bowl, r#"SELECT * FROM bowls WHERE id = $1"#, bowl_id.id)
         .fetch_one(&self.db)
         .await
         .expect("Failed to get a bowl");

@@ -6,6 +6,7 @@ CREATE TABLE bowls (
 
 CREATE TABLE waterlevels (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    bowl_id INTEGER NOT NULL,
     date DATETIME,
     waterlevel INTEGER NOT NULL
 );

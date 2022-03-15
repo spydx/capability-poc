@@ -1,9 +1,12 @@
 [workspace]
 
 members = [
-    "simple-api",
+
     "trait-bounds",
     "capabilities",
     "gnap-cli",
     "http-auth-filter",
+]
+exclude = [
+    "simple-api",
 ]

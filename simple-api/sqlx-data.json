@@ -1,47 +1,52 @@
 {
   "db": "SQLite",
   "15ca97c1172a7db29b5d27e9661770e5dff06af68f7e974b3925c3b1d285dd13": {
-    "query": "SELECT * FROM waterlevels",
     "describe": {
       "columns": [
         {
-          "name": "date",
+          "name": "id",
           "ordinal": 0,
-          "type_info": "Datetime"
+          "type_info": "Int64"
         },
         {
-          "name": "id",
+          "name": "bowl_id",
           "ordinal": 1,
           "type_info": "Int64"
         },
         {
-          "name": "waterlevel",
+          "name": "date",
           "ordinal": 2,
+          "type_info": "Datetime"
+        },
+        {
+          "name": "waterlevel",
+          "ordinal": 3,
           "type_info": "Int64"
         }
       ],
+      "nullable": [
+        false,
+        false,
+        true,
+        false
+      ],
       "parameters": {
         "Right": 0
-      },
-      "nullable": [
-        true,
-        false,
-        false
-      ]
-    }
+      }
+    },
+    "query": "SELECT * FROM waterlevels"
   },
   "6d5784747bc5f3e1f7ca4794c19c151feff8e343d44dd868aee2a822e2b05dc8": {
-    "query": "INSERT INTO bowls (name) VALUES ($1)",
     "describe": {
       "columns": [],
+      "nullable": [],
       "parameters": {
         "Right": 1
-      },
-      "nullable": []
-    }
+      }
+    },
+    "query": "INSERT INTO bowls (name) VALUES ($1)"
   },
-  "7d3a3ed6a5ec5c15cf4030f856a029b3b1a00e646f2e8866fe9a89adc9c9c914": {
-    "query": "SELECT * FROM bowls WHERE name = $1",
+  "7aef49518dd86287726848c78a20344fde7fb606f45985ba0844a948cb63a188": {
     "describe": {
       "columns": [
         {
@@ -55,123 +60,150 @@
           "type_info": "Text"
         }
       ],
-      "parameters": {
-        "Right": 1
-      },
       "nullable": [
         false,
         false
-      ]
-    }
+      ],
+      "parameters": {
+        "Right": 1
+      }
+    },
+    "query": "SELECT * FROM bowls WHERE id = $1"
+  },
+  "7d3a3ed6a5ec5c15cf4030f856a029b3b1a00e646f2e8866fe9a89adc9c9c914": {
+    "describe": {
+      "columns": [
+        {
+          "name": "id",
+          "ordinal": 0,
+          "type_info": "Int64"
+        },
+        {
+          "name": "name",
+          "ordinal": 1,
+          "type_info": "Text"
+        }
+      ],
+      "nullable": [
+        false,
+        false
+      ],
+      "parameters": {
+        "Right": 1
+      }
+    },
+    "query": "SELECT * FROM bowls WHERE name = $1"
   },
   "968213f768ea849ed9a52cf0c7fa4c0d2792cf0a50b086b049d0bd44925b4bdd": {
-    "query": "SELECT * FROM waterlevels WHERE id = $1",
     "describe": {
       "columns": [
         {
-          "name": "date",
+          "name": "id",
           "ordinal": 0,
-          "type_info": "Datetime"
+          "type_info": "Int64"
         },
         {
-          "name": "id",
+          "name": "bowl_id",
           "ordinal": 1,
           "type_info": "Int64"
         },
         {
-          "name": "waterlevel",
+          "name": "date",
           "ordinal": 2,
+          "type_info": "Datetime"
+        },
+        {
+          "name": "waterlevel",
+          "ordinal": 3,
           "type_info": "Int64"
         }
       ],
+      "nullable": [
+        false,
+        false,
+        true,
+        false
+      ],
       "parameters": {
         "Right": 1
-      },
-      "nullable": [
-        true,
-        false,
-        false
-      ]
-    }
+      }
+    },
+    "query": "SELECT * FROM waterlevels WHERE id = $1"
   },
   "a3058ef889ae59930b81c371661ba98f786818e142708dcefd93e7acb2406ca1": {
-    "query": "DELETE FROM waterlevels WHERE id = $1",
     "describe": {
       "columns": [],
+      "nullable": [],
       "parameters": {
         "Right": 1
-      },
-      "nullable": []
-    }
+      }
+    },
+    "query": "DELETE FROM waterlevels WHERE id = $1"
+  },
+  "b2820d3a7202789cdfeb6fb1c12513baef2e504c1e1028769f0a2f6e68ab8b88": {
+    "describe": {
+      "columns": [],
+      "nullable": [],
+      "parameters": {
+        "Right": 3
+      }
+    },
+    "query": "INSERT INTO waterlevels (bowl_id, date, waterlevel) VALUES ($1, $2, $3)"
   },
   "cf36e16c461f11f5766021da72a5a37d915abfc97f0be8869558d8d141cabb8a": {
-    "query": "DELETE FROM bowls WHERE id = $1",
     "describe": {
       "columns": [],
+      "nullable": [],
       "parameters": {
         "Right": 1
-      },
-      "nullable": []
-    }
+      }
+    },
+    "query": "DELETE FROM bowls WHERE id = $1"
   },
-  "d6dc58279f3a9c075b2ce47989c2e6d16d492d1957ffc6265da3f51ddbd7be52": {
-    "query": "SELECT * FROM waterlevels WHERE date = $1",
+  "cf7533e41061a8b95dc6d031de567a7ad62970dc18485b6fb201d12c4e583d1e": {
     "describe": {
       "columns": [
         {
-          "name": "date",
+          "name": "id",
           "ordinal": 0,
-          "type_info": "Datetime"
+          "type_info": "Int64"
         },
         {
-          "name": "id",
+          "name": "bowl_id",
           "ordinal": 1,
           "type_info": "Int64"
         },
         {
-          "name": "waterlevel",
+          "name": "date",
           "ordinal": 2,
+          "type_info": "Datetime"
+        },
+        {
+          "name": "waterlevel",
+          "ordinal": 3,
           "type_info": "Int64"
         }
       ],
+      "nullable": [
+        false,
+        false,
+        true,
+        false
+      ],
       "parameters": {
         "Right": 1
-      },
-      "nullable": [
-        true,
-        false,
-        false
-      ]
-    }
-  },
-  "da77d11f8bf6a17fe792b1fcda3ed02d4e15ba21b3cbff91ea4cca2926232794": {
-    "query": "INSERT INTO waterlevels (id, date, waterlevel) VALUES ($1, $2, $3)",
-    "describe": {
-      "columns": [],
-      "parameters": {
-        "Right": 3
-      },
-      "nullable": []
-    }
+      }
+    },
+    "query": "SELECT * FROM waterlevels WHERE bowl_id = $1"
   },
   "e850fbd67b69507841f4e791b075b17735bccecce1e8362fc3efd85ceef76c56": {
-    "query": "DELETE FROM bowls WHERE name = $1",
     "describe": {
       "columns": [],
+      "nullable": [],
       "parameters": {
         "Right": 1
-      },
-      "nullable": []
-    }
-  },
-  "f423d1e5780669cab577733930ac309846643057748625a0fa88ebca7443c68e": {
-    "query": "DELETE FROM waterlevels WHERE date = $1",
-    "describe": {
-      "columns": [],
-      "parameters": {
-        "Right": 1
-      },
-      "nullable": []
-    }
+      }
+    },
+    "query": "DELETE FROM bowls WHERE name = $1"
   }
 }
