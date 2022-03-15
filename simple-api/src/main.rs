@@ -1,6 +1,6 @@
 use actix_web::middleware::Logger;
 use actix_web::web::{self};
-use actix_web::{get, post, App, HttpResponse, HttpServer, Responder};
+use actix_web::{get, post,delete, App, HttpResponse, HttpServer, Responder};
 #[allow(unused_imports)]
 use actix_web_httpauth::middleware::HttpAuthentication;
 use capabilities::capabilities_derive::capabilities;
@@ -89,12 +89,11 @@ async fn main() -> Result<(), std::io::Error> {
             .wrap(Logger::default())
             .service(
                 web::scope(root)
-                    .service(hello)
                     .service(create_new_bowl)
-                    .service(get_bowl)
-                    .service(get_bowl_waterlevel)
+                    .service(get_bowl_by_id)
                     .service(add_bowl_waterlevel)
-                    .service(get_all_waterlevels),
+                    .service(get_all_bowl_waterlevels)
+                    .service(delete_all_bowl_waterlevels),
             )
             .app_data(web::Data::new(service.clone()))
     })
@@ -103,11 +102,6 @@ async fn main() -> Result<(), std::io::Error> {
     .await?;
 
     Ok(())
-}
-
-#[get("/")]
-pub async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("hello from server")
 }
 
 /*
@@ -133,7 +127,7 @@ pub async fn create_new_bowl(
 }
 
 #[get("/bowls/{id}")]
-pub async fn get_bowl(
+pub async fn get_bowl_by_id(
     bowl_id: web::Path<String>,
     svc: web::Data<CapService>,
     cap: Capability,
@@ -151,19 +145,8 @@ pub async fn get_bowl(
     }
 }
 
-#[get("/bowls/waterlevels/{id}")]
-pub async fn get_bowl_waterlevel(
-    _bowl_id: web::Path<String>,
-    svc: web::Data<CapService>,
-    _cap: Capability,
-) -> impl Responder {
 
-    let _svc = svc.get_ref();
-    
-    HttpResponse::Ok().body("Not Implemented")
-}
-
-#[post("/bowls/waterlevels/{id}")]
+#[post("/waterlevels/{id}")]
 pub async fn add_bowl_waterlevel(
     bowl_id: web::Path<String>,
     json: web::Form<WaterlevelsDTO>,
@@ -186,19 +169,37 @@ pub async fn add_bowl_waterlevel(
         Ok(d) => HttpResponse::Ok().json(d),
         _ => HttpResponse::BadRequest().body("malformed request")
     }
-
-
-    //HttpResponse::Ok().body("Not Implemented")
 }
 
-#[get("/bowls/waterlevels/")]
-pub async fn get_all_waterlevels(svc: web::Data<CapService>, cap: Capability) -> impl Responder {
+#[get("/waterlevels/{id}")]
+pub async fn get_all_bowl_waterlevels(
+    bowl_id: web::Path<String>,
+    svc: web::Data<CapService>, 
+    cap: Capability) -> impl Responder {
     let svc = svc.get_ref();
-    match read_db_all_waterlevels(svc, cap).await {
+    let bowl_id = WaterlevelId { id: bowl_id.parse::<i64>().unwrap() };
+    
+    match read_db_waterlevel_by_id(svc, bowl_id, cap).await {
         Ok(d) => HttpResponse::Ok().json(d),
         _ => HttpResponse::Forbidden().body("no access")
     }
 }
+
+#[delete("/waterlevels/{id}")]
+pub async fn delete_all_bowl_waterlevels(
+    bowl_id: web::Path<String>,
+    svc: web::Data<CapService>,
+    cap: Capability) -> impl Responder {
+    let svc = svc.get_ref();
+
+    let bowl_id = WaterlevelId { id: bowl_id.parse::<i64>().unwrap() };
+
+    match delete_db_waterlevel_by_id(svc, bowl_id, cap).await {
+        Ok(_) => HttpResponse::Ok().json("success"),
+        _ => HttpResponse::Forbidden().json("no access")
+    }
+}
+
 
 /*
     Service layer, storing data in database.
@@ -254,7 +255,7 @@ pub fn create_db_waterlevels(waterlevel: Waterlevel) -> Result<Waterlevel, CapSe
 }
 
 #[capability(Read, Waterlevel, id = "i64")]
-pub fn get_db_waterlevel_by_id(
+pub fn read_db_waterlevel_by_id(
     waterlevel_id: WaterlevelId,
 ) -> Result<Waterlevel, CapServiceError> {
     let waterlevel = sqlx::query_as!(
@@ -306,7 +307,7 @@ pub fn delete_db_waterlevel(waterlevel: Waterlevel) -> Result<(), CapServiceErro
     }
 }
 
-#[capability(Delete, Waterlevel, id = "DateTime")]
+#[capability(Delete, Waterlevel, id = "i64")]
 pub fn delete_db_waterlevel_by_id(waterlevel: Waterlevel) -> Result<(), CapServiceError> {
     match sqlx::query!(r#"DELETE FROM waterlevels WHERE id = $1"#, waterlevel.id)
         .execute(&self.db)
