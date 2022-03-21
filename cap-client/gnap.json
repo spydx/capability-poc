@@ -1,0 +1,18 @@
+{
+"access_token" : [
+    {
+    "resource_type" : "waterbowl-access",
+    "actions ": ["read"],
+    "locations": ["http://localhost:8080/bowls"]
+    }
+  ],
+  "client": "7e057b0c-17e8-4ab4-9260-2b33f32b2cce",
+  "interact": {
+    "start": [ "redirect" ],
+    "finish": {
+      "method": "redirect",
+      "uri": "localhost:8000/gnap/auth",
+      "nonce": v4()
+    }
+  }
+}
