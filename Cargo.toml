@@ -8,4 +8,5 @@ members = [
 ]
 exclude = [
     "simple-api",
+    "gnap",
 ]
