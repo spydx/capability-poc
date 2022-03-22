@@ -12,7 +12,7 @@ export default function Home() {
     if (router.query.tx != null) {
       setTransaction(router.query.tx)
     }
-  }, [tx])
+  }, [router.query.tx, setTransaction, tx])
 
   return (
     <>
