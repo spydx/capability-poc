@@ -7,6 +7,8 @@ export default function useGnap() {
     const [tx, setTx] = useState(null);
     const [gnapRequest, setGnapRequest] = useState(null);
     const [gnapResponse, setGnapResponse] = useState(null);
+    const [accessToken, setAccessToken] = useState(null);
+    const [showCreate, setShowCreate] = useState(false);
 
     const redirectLogin = (value) => {
         if(value) {
@@ -26,7 +28,6 @@ export default function useGnap() {
               {
                 "type" : "waterbowl-access",
                 "actions": [
-                    "read",
                     "create"
                 ],
                 "locations": ["http://localhost:8080/bowls/"]
@@ -80,7 +81,25 @@ export default function useGnap() {
             .then(d => d)
             .catch((err) => console.log(err))
             setGnapResponse(response)
-            console.log(response)
+            setAccessToken(response.access_token.value)
+        }
+    }
+
+    const create_resourse = async (name) => {
+        if (accessToken != null) {
+            let url = gnapResponse.access_token.access[0].locations[0];
+            let bowl = { "name": name};
+            await fetch(url,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json",
+                        "Authorization": "Bearer " + accessToken
+                    },
+                    body: JSON.stringify(bowl)
+                }
+                
+            )
         }
     }
     return {
@@ -91,6 +110,9 @@ export default function useGnap() {
         setTransaction,
         gnapRequest,
         gnap_request,
-        gnap_contiuation
+        gnap_contiuation,
+        showCreate,
+        setShowCreate,
+        create_resourse
     }
 }

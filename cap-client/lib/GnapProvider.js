@@ -11,6 +11,9 @@ const GnapContext = createContext({
     setTransaction: async () => {},
     gnap_request: async () => {},
     gnap_contiuation: async () => {},
+    showCreate: false,
+    setShowCreate: async () => {},
+    create_resourse: async () => {},
 });
 
 export default function GnapProvider({children}) {

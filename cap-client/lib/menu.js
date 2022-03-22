@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useGnapContext } from "./GnapProvider";
 
 export default function Menu() {
-    const { gnap_request, gnap_contiuation, tx, redirect, redirectLogin } = useGnapContext()
+    const { showCreate, setShowCreate,gnap_request, gnap_contiuation, tx, redirect, redirectLogin } = useGnapContext()
     
 
     const btn = "bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 border border-gray-400 rounded shadow"
@@ -46,7 +46,15 @@ export default function Menu() {
               <div>Actions:</div>
             </div>
             <div className="p-2">
-              <button className={btn}>Create a resource</button> 
+              <button className={btn}
+                onClick={() => {
+                  if(showCreate) {
+                    setShowCreate(false) 
+                  } else {
+                    setShowCreate(true)
+                  }
+                }}
+              >Create a resource</button> 
             </div>
             <div className="p-2">
               <button className={btn}

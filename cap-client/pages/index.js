@@ -2,11 +2,12 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useGnapContext } from '../lib/GnapProvider';
 import Menu from '../lib/menu';
-
+import CreateBowl from '../lib/comps/CreateBowl';
 
 export default function Home() {
   const router = useRouter();
-  const {tx,  setTransaction } = useGnapContext()
+  const {tx,  setTransaction, showCreate } = useGnapContext()
+
   
   useEffect( () => {
     if (router.query.tx != null) {
@@ -22,8 +23,13 @@ export default function Home() {
           <div className="row-span-3">
             <Menu />
           </div>
-          <div className="col-span-2 bg-red-200">02</div>
-          <div className="row-span-2 col-span-2 bg-blue-200">03</div>
+          <div className="col-span-2 bg-red-200">
+           02
+          </div>
+          <div className="row-span-2 col-span-2 bg-blue-200">
+            03
+            { showCreate ? <CreateBowl /> : ""}
+            </div>
         </div>
     </>
   )
