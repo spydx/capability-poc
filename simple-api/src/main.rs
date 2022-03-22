@@ -26,7 +26,6 @@ pub struct BowlsDTO {
 pub struct WaterlevelsDTO {
     #[allow(dead_code)] //TODO: remove once this is used.
     id: i64,
-    #[allow(dead_code)] //TODO: remove once this is used.
     waterlevel: i64,
 }
 /*
@@ -158,7 +157,7 @@ pub async fn add_bowl_waterlevel(
     
     let waterlevel = Waterlevel {
         id:  0,
-        bowl_id: bowl_id,
+        bowl_id,
         waterlevel: json.waterlevel,
         date: Some(date)
     };
