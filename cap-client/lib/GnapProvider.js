@@ -9,7 +9,8 @@ const GnapContext = createContext({
     request: null,
     gnaprequest: null,
     setTransaction: async () => {},
-    make_gnap_request: async () => {},
+    gnap_request: async () => {},
+    gnap_contiuation: async () => {},
 });
 
 export default function GnapProvider({children}) {

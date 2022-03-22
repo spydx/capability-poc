@@ -6,6 +6,7 @@ export default function useGnap() {
     const [redirect, setRedirect] = useState(false);
     const [tx, setTx] = useState(null);
     const [gnapRequest, setGnapRequest] = useState(null);
+    const [gnapResponse, setGnapResponse] = useState(null);
 
     const redirectLogin = (value) => {
         if(value) {
@@ -17,7 +18,7 @@ export default function useGnap() {
     const setTransaction = async (val) => {
         setTx(val)
     }
-    const make_gnap_request = async () => {
+    const gnap_request = async () => {
         let uuid = v4();
         let request = {
           "access_token": {
@@ -63,6 +64,25 @@ export default function useGnap() {
         setTx(data.instance_id)
     }
 
+    const gnap_contiuation = async () => {
+        if (tx != null) {
+            let contreq = { "interact_ref": tx };
+            let url = "http://localhost:8000/gnap/tx/" + tx
+            let response = await fetch(url,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-type": "application/json"
+                    },
+                    body: JSON.stringify(contreq)
+                }
+            ).then(res => res.json())
+            .then(d => d)
+            .catch((err) => console.log(err))
+            setGnapResponse(response)
+            console.log(response)
+        }
+    }
     return {
         user,
         redirect,
@@ -70,6 +90,7 @@ export default function useGnap() {
         tx,
         setTransaction,
         gnapRequest,
-        make_gnap_request
+        gnap_request,
+        gnap_contiuation
     }
 }
