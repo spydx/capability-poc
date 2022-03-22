@@ -62,7 +62,6 @@ where
 async fn main() -> Result<(), std::io::Error> {
     println!("Hello, world!");
 
-    let root = "/api";
     let binding = "0.0.0.0:8080";
 
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("debug"));
@@ -87,14 +86,11 @@ async fn main() -> Result<(), std::io::Error> {
             .app_data(gnap_client.clone())
             .wrap(bearer_auth.clone())
             .wrap(Logger::default())
-            .service(
-                web::scope(root)
-                    .service(create_new_bowl)
-                    .service(get_bowl_by_id)
-                    .service(add_bowl_waterlevel)
-                    .service(get_all_bowl_waterlevels)
-                    .service(delete_all_bowl_waterlevels),
-            )
+            .service(create_new_bowl)
+            .service(get_bowl_by_id)
+            .service(add_bowl_waterlevel)
+            .service(get_all_bowl_waterlevels)
+            .service(delete_all_bowl_waterlevels)
             .app_data(web::Data::new(service.clone()))
     })
     .bind(binding)?
@@ -120,6 +116,7 @@ pub async fn create_new_bowl(
     };
 
     println!("{:#?}", newbowl);
+    println!("Cap: {:#?}", cap);
     match create_db_bowl(svc, newbowl, cap).await {
         Ok(bowl) => HttpResponse::Ok().json(bowl),
         _ => HttpResponse::BadRequest().json("{ \"request\": \"bad request\" "),
