@@ -32,9 +32,21 @@ This will make you able to run the following commands without problems:
 
 You need:
 
-- Cargo : [install](https://www.rust-lang.org/tools/install)
+- Rust/Cargo : [install](https://www.rust-lang.org/tools/install)
 - SQLx-cli : `cargo install sqlx-cli` [install](https://lib.rs/crates/sqlx-cli)
 - sqlx needs SQLite support, so either specify or leave for default.
+
+### Ubuntu
+
+You will need:
+
+```sh
+sudo apt install build-essential
+sudo apt install libssl-dev
+sudo apt install pkg-config
+rustup toolchain install nightly # do this if cargo doesn't do it automatically
+cargo check # after all above, this should work from the project root.
+```
 
 ### Docker
 
