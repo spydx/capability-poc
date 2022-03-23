@@ -4,6 +4,8 @@ PS: remember to clone with `--recurse-submodules`
 
 ```sh
 git clone --recurse-submodules <repo>
+git submodule update --init --recursive # first time
+git submodule update --recursive --remote # other option
 git pull --recurse-submodules
 ```
 
