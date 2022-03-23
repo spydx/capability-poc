@@ -19,7 +19,6 @@ export default function Menu() {
       }
     },[redirect])
 
-    console.log("TX: " + tx)
     return (
         <>
         <div className="flex flex-col">
