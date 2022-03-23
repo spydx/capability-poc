@@ -1,4 +1,10 @@
 services:
+  cap-client:
+    build:
+      context: .
+      dockerfile: dockerfiles/cap-client
+    ports:
+      - "3000:3000"
   #simple-api:
   #  build:
   #    context: .
