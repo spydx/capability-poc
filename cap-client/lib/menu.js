@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useGnapContext } from "./GnapProvider";
 
 export default function Menu() {
-    const { showCreate, setShowCreate,gnap_request, gnap_contiuation, tx, redirect, redirectLogin } = useGnapContext()
+    const { showCreate, setShowCreate, gnap_create_request, gnap_contiuation, tx, redirect, redirectLogin } = useGnapContext()
     
-
+    console.log(tx)
     const btn = "bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 border border-gray-400 rounded shadow"
 
 
@@ -17,14 +17,14 @@ export default function Menu() {
       } else {
         console.log("Create a GnapRequest First")
       }
-    },[redirect])
+    },[redirect, tx])
 
     return (
         <>
         <div className="flex flex-col">
           <div className="p-2"> 
             <button className={btn}
-              onClick={() => gnap_request()}
+              onClick={() => gnap_create_request()}
             >1. Gnap Request</button>
           </div>
           <div className="p-2">

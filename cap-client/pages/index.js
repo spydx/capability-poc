@@ -6,7 +6,7 @@ import CreateBowl from '../lib/comps/CreateBowl';
 
 export default function Home() {
   const router = useRouter();
-  const {tx,  setTransaction, showCreate } = useGnapContext()
+  const {tx,  setTransaction, showCreate, gnapResponse } = useGnapContext()
 
   
   useEffect( () => {
@@ -24,7 +24,9 @@ export default function Home() {
             <Menu />
           </div>
           <div className="col-span-2 bg-red-200">
-           02
+           02 
+           { gnapResponse != null ? <p>Show GnapResponse {gnapResponse}</p> : <></>}
+
           </div>
           <div className="row-span-2 col-span-2 bg-blue-200">
             03
