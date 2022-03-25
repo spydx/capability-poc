@@ -30,7 +30,7 @@ const ReadBowl = (bowl) => {
                 >Read</button>
             </div>
             <div>
-                { read_resourse_data == null ? <div></div> : <div>{read_resourse_data.id} : {read_resourse_data.name}</div>}
+                { read_resourse_data == null ? <div></div> : <div className="font-bold">Result: {read_resourse_data.id} : {read_resourse_data.name}</div>}
             </div>
         </div>
     </>);

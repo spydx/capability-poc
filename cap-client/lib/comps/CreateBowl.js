@@ -29,7 +29,7 @@ const CreateBowl = (bowl) => {
                 >Create</button>
             </div>
             <div>
-                { create_resourse_data == null ? <div></div> : <div>Created: {create_resourse_data.status}</div>}
+                { create_resourse_data == null ? <div></div> : <div className="font-bold">Created = {create_resourse_data.id} : {create_resourse_data.name}</div>}
             </div>
         </div>
     </>);

@@ -30,7 +30,7 @@ const ReadWaterlevel = (bowl) => {
                 >Read</button>
             </div>
             <div>
-                { readWaterlevel == null ? <div></div> : <div>{readWaterlevel.id}</div>}
+                { readWaterlevel == null ? <div></div> : <div className="font-bold">Result: {readWaterlevel.id} {readWaterlevel.waterlevel} {readWaterlevel.date}</div>}
             </div>
         </div>
     </>);
