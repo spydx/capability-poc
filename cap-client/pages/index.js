@@ -18,7 +18,7 @@ export default function Home() {
 
   return (
     <>
-        <div className='px-2 text-2xl font-bold'>Bowl</div>
+        <div className='px-2 text-2xl font-bold'>Bowl Managment</div>
         <div className="grid grid-rows-3 grid-flow-col gap-4">
           
           <div className="row-span-3">
@@ -26,10 +26,12 @@ export default function Home() {
           </div>
           <div className="col-span-2 bg-red-200">
            { requestMap == null ? <>RequestMap</> : <div>
+             <div className='font-bold'>
               <ul>
                 <il> Key: Value</il>
               </ul>
               <hr />
+              </div>
              { 
              Array.from(requestMap, function(item) {
                return (<>
@@ -54,7 +56,12 @@ export default function Home() {
 
           </div>
           <div className="row-span-2 col-span-2 bg-blue-200">
-            03
+              <div className='font-bold'>
+                <ul>
+                  <il>Action and Data</il>
+                </ul>
+                <hr />
+              </div>
             { showCreate ? <CreateBowl /> : ""}
             { showRead ? <ReadBowl /> : ""}
             </div>

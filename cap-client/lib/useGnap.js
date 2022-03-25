@@ -86,10 +86,7 @@ export default function useGnap() {
   const setTransaction = async (val) => {
     setTx(val)
   }
-  const gnap_create_request = async () => {
-
-
-
+  const gnap_all_request = async () => {
     let data = await fetch("http://localhost:8000/gnap/tx",
       {
         method: "POST",
@@ -120,8 +117,7 @@ export default function useGnap() {
   }
 
   const gnap_read_request = async () => {
-    let uuid = v4();
-    let request = {
+    let read_request = {
       "access_token": {
         "access": [
           {
@@ -289,9 +285,7 @@ export default function useGnap() {
     gnapCreateRequest,
     gnapReadRequest,
     gnapDeleteRequest,
-    gnap_create_request,
-    gnap_read_request,
-    gnap_delete_request,
+    gnap_all_request,
     gnap_contiuation,
     showCreate,
     setShowCreate,
