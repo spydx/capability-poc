@@ -18,17 +18,17 @@ export default function Home() {
 
   return (
     <>
-        <div className='px-2 text-2xl font-bold'>Bowl Managment</div>
-        <div className="grid grid-rows-3 grid-flow-col gap-4">
+        <div className='px-4 text-2xl font-bold'>Bowl Managment</div>
+        <div className="grid grid-rows-3 grid-flow-col gap-4 px-2">
           
           <div className="row-span-3">
             <Menu />
           </div>
-          <div className="col-span-2 bg-red-200">
+          <div className="col-span-2 bg-red-200 p-2">
            { requestMap == null ? <>RequestMap</> : <div>
              <div className='font-bold'>
               <ul>
-                <il> Key: Value</il>
+                <il> Label : Path</il>
               </ul>
               <hr />
               </div>
@@ -43,6 +43,12 @@ export default function Home() {
              })
              }</div>}
            { accessTokenMap == null ? <p>TokenMap</p> : <>
+           <div className='font-bold'>
+              <ul>
+                <il> Access : Token </il>
+              </ul>
+              <hr />
+              </div>
            {
              Array.from(accessTokenMap, function(access) {
               return (<>
@@ -55,7 +61,7 @@ export default function Home() {
            }</>}
 
           </div>
-          <div className="row-span-2 col-span-2 bg-blue-200">
+          <div className="row-span-2 col-span-2 bg-blue-200 p-2">
               <div className='font-bold'>
                 <ul>
                   <il>Action and Data</il>

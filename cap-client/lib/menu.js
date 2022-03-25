@@ -22,29 +22,29 @@ export default function Menu() {
     return (
         <>
         <div className="flex flex-col">
-          <div className="p-2"> 
+          <div className="p-1"> 
             <button className={btn}
               onClick={() => gnap_all_request()}
             >1. Gnap Request</button>
           </div>
-          <div className="p-2">
+          <div className="p-1">
             <button className={btn}
             onClick={() => {
               redirectLogin(true)
               }}
             >2. Login</button> 
           </div>
-          <div className="p-2">
+          <div className="p-1">
             <button className={btn}
               onClick={() => gnap_contiuation()}>
               3. Continuation Request
             </button>
           </div>
           <div className="">
-            <div className="p-2">
+            <div className="p-1">
               <div className="font-bold">Actions:</div>
             </div>
-            <div className="p-2">
+            <div className="p-1">
               <button className={btn}
                 onClick={() => {
                   if(showCreate) {
@@ -55,7 +55,7 @@ export default function Menu() {
                 }}
               >Create a resource</button> 
             </div>
-            <div className="p-2">
+            <div className="p-1">
               <button className={btn}
               onClick={() => {
                 if(showRead) {
@@ -66,7 +66,7 @@ export default function Menu() {
               }}
               >Read a resource</button> 
             </div>
-            <div className="p-2">
+            <div className="p-1">
               <button className={btn}>Delete a resource</button> 
             </div>
           </div>
