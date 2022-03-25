@@ -3,10 +3,11 @@ import { useEffect } from 'react';
 import { useGnapContext } from '../lib/GnapProvider';
 import Menu from '../lib/menu';
 import CreateBowl from '../lib/comps/CreateBowl';
+import ReadBowl from '../lib/comps/ReadBowl';
 
 export default function Home() {
   const router = useRouter();
-  const {tx,  setTransaction, showCreate, gnapResponse } = useGnapContext()
+  const {tx, showRead,  setTransaction, showCreate, requestMap, accessTokenMap } = useGnapContext()
 
   
   useEffect( () => {
@@ -24,13 +25,38 @@ export default function Home() {
             <Menu />
           </div>
           <div className="col-span-2 bg-red-200">
-           02 
-           { gnapResponse != null ? <p>Show GnapResponse {gnapResponse}</p> : <></>}
+           { requestMap == null ? <>RequestMap</> : <div>
+              <ul>
+                <il> Key: Value</il>
+              </ul>
+              <hr />
+             { 
+             Array.from(requestMap, function(item) {
+               return (<>
+                <ul>
+                  <il>{item[0]} : {item[1]}</il>
+                </ul>
+                <hr />
+                </>);
+             })
+             }</div>}
+           { accessTokenMap == null ? <p>TokenMap</p> : <>
+           {
+             Array.from(accessTokenMap, function(access) {
+              return (<>
+                <ul>
+                  <il>{access[0]} : {access[1]}</il>
+                </ul>
+                <hr />
+                </>);
+             })
+           }</>}
 
           </div>
           <div className="row-span-2 col-span-2 bg-blue-200">
             03
             { showCreate ? <CreateBowl /> : ""}
+            { showRead ? <ReadBowl /> : ""}
             </div>
         </div>
     </>

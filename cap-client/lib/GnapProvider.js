@@ -16,7 +16,10 @@ const GnapContext = createContext({
     showCreate: false,
     setShowCreate: async () => {},
     create_resourse: async () => {},
+    showRead: false,
+    setShowRead: async () => {},
     gnapResponse: null,
+    read_resource: async () => {}
 });
 
 export default function GnapProvider({children}) {
