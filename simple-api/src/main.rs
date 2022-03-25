@@ -135,6 +135,8 @@ pub async fn get_bowl_by_id(
     let bowl_id = BowlId {
         id: id.parse::<i64>().unwrap(),
     };
+    println!("Finding: {:?}", id);
+    println!("Cap: {:?}", cap);
     match read_db_bowl_by_id(svc, bowl_id, cap).await {
         Ok(bowl) => HttpResponse::Ok().json(bowl),
         _ => HttpResponse::NoContent().json("{ msg : no content } "),
@@ -320,7 +322,6 @@ pub fn read_db_bowl_by_id(bowl_id: BowlId) -> Result<Bowl, CapServiceError> {
         .fetch_one(&self.db)
         .await
         .expect("Failed to get a bowl");
-
     Ok(b)
 }
 
