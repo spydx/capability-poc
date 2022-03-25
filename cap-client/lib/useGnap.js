@@ -262,16 +262,22 @@ export default function useGnap() {
     if (accessTokenMap != null && requestMap != null) {
 
       let url = requestMap.get("read_bowls");
-      let token = accessTokenMap.get("read_bowl");
-      await fetch(url + "/" + id,
+      let token = accessTokenMap.get("read_bowls");
+      let data = await fetch(url + id,
         {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-type": "application/json",
             "Authorization": "Bearer " + token
           }
         }
-      )
+      ).then(res => {
+        console.log(res);
+        return res.json()})
+      .then(d => d)
+      .catch((err) => console.log(err))
+
+      console.log(data)
     }
   }
 
