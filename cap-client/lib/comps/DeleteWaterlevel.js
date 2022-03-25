@@ -4,7 +4,7 @@ import { useGnapContext } from "../GnapProvider";
 const DeleteWaterlevel = (bowl) => {
 
     const [id, setId ] = useState("");
-    const {delete_resourse_data, delete_resource} = useGnapContext();
+    const {delete_waterlevel_data, delete_waterlevel} = useGnapContext();
     
 
     const btn = "bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 border border-gray-400 rounded shadow"
@@ -12,7 +12,7 @@ const DeleteWaterlevel = (bowl) => {
     return (<>
         <div>
             <div className='flex flex-col item-center'>
-                <p>Bowl ID</p>
+                <p>Delete Waterlevel</p>
                 <input 
                     type="text"
                     className="py-2 px-4"
@@ -24,13 +24,13 @@ const DeleteWaterlevel = (bowl) => {
                     onClick={ () => {
                         if (id != "") {
                             console.log("clicky bitch")
-                            delete_resource(id)
+                            delete_waterlevel(id)
                         }
                     }}
                 >Delete</button>
             </div>
             <div>
-                { delete_resourse_data == null ? <div></div> : <div>{delete_resourse_data.status}</div>}
+                { delete_waterlevel_data == null ? <div></div> : <div>{delete_waterlevel_data.status}</div>}
             </div>
         </div>
     </>);

@@ -126,6 +126,7 @@ export default function useGnap() {
 
   const [create_resourse_data, setCreateResourseData] = useState(null);
   const [create_waterlevel_data, setCreateWaterLevel ] = useState(null);
+  const [delete_waterlevel_data, setDeleteWaterlevel] = useState(null);
 
   const [showCreateWaterlevel, setShowCreateWaterlevel ] = useState()
   const [showReadWaterlevel, setShowReadWaterlevel ] = useState()
@@ -392,7 +393,6 @@ export default function useGnap() {
       let response = await fetch(url + bowlid, {
         method: "POST",
         headers: {
-          
           "Content-Type": "application/json",
           "Authorization": "Bearer " + token
         },
@@ -402,6 +402,24 @@ export default function useGnap() {
       .then(d => d)
       .catch(err => console.log(err))
       setCreateWaterLevel(response)
+    }
+  }
+
+  const delete_waterlevel = async (id) => {
+    if (accessTokenMap != null && requestMap != null) {
+      let url = requestMap.get("delete_waterlevel")
+      let token = accessTokenMap.get("delete_waterlevel")
+      let resp = await fetch(url + id, {
+        method: 'DELETE',
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
+        },
+      })
+      .then(res => res.json())
+      .then(d => d)
+      .catch(err => console.log(err))
+      setDeleteWaterlevel(resp)
     }
   }
   
@@ -439,6 +457,7 @@ export default function useGnap() {
     showDeleteWaterlevel, setShowDeleteWaterlevel,
     readWaterlevel, setReadWaterlevel,
     get_waterlevel_by_id,
-    create_waterlevel_data, create_waterlevel
+    create_waterlevel_data, create_waterlevel,
+    delete_waterlevel_data, delete_waterlevel
   }
 }

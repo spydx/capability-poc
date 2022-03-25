@@ -12,7 +12,7 @@ const ReadWaterlevel = (bowl) => {
     return (<>
         <div>
             <div className='flex flex-col item-center'>
-                <p>Waterlevel</p>
+                <p>Read Waterlevel</p>
                 <input 
                     type="text"
                     className="py-2 px-4"

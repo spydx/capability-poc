@@ -11,7 +11,7 @@ const CreateBowl = (bowl) => {
     return (<>
         <div>
             <div className='flex flex-col item-center'>
-                <p>Bowl Name</p>
+                <p>Create Bowl</p>
                 <input 
                     type="text"
                     className="py-2 px-4"

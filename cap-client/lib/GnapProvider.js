@@ -27,6 +27,7 @@ const GnapContext = createContext({
     setShowDeleteWaterlevel: async () => {},
     get_waterlevel_by_id: async () => {},
     create_waterlevel: async () => {},
+    delete_waterlevel: async () => {},
 });
 
 export default function GnapProvider({children}) {

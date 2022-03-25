@@ -12,7 +12,7 @@ const ReadBowl = (bowl) => {
     return (<>
         <div>
             <div className='flex flex-col item-center'>
-                <p>Bowl ID</p>
+                <p>Read Bowl</p>
                 <input 
                     type="text"
                     className="py-2 px-4"
