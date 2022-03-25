@@ -24,8 +24,6 @@ pub struct BowlsDTO {
 }
 #[derive(Deserialize)]
 pub struct WaterlevelsDTO {
-    #[allow(dead_code)] //TODO: remove once this is used.
-    id: i64,
     waterlevel: i64,
 }
 /*
@@ -147,7 +145,7 @@ pub async fn get_bowl_by_id(
 #[post("/waterlevels/{id}")]
 pub async fn add_bowl_waterlevel(
     bowl_id: web::Path<String>,
-    json: web::Form<WaterlevelsDTO>,
+    json: web::Json<WaterlevelsDTO>,
     svc: web::Data<CapService>,
     cap: Capability,
 ) -> impl Responder {
@@ -163,9 +161,10 @@ pub async fn add_bowl_waterlevel(
         waterlevel: json.waterlevel,
         date: Some(date)
     };
+    println!("{:#?}", cap);
     match create_db_waterlevels(svc, waterlevel, cap).await {
         Ok(d) => HttpResponse::Ok().json(d),
-        _ => HttpResponse::BadRequest().body("malformed request")
+        _ => HttpResponse::BadRequest().json("{ msg : bad request } ")
     }
 }
 
@@ -258,7 +257,7 @@ pub fn read_db_waterlevel_by_id(
 ) -> Result<Waterlevel, CapServiceError> {
     let waterlevel = sqlx::query_as!(
         Waterlevel,
-        r#"SELECT * FROM waterlevels WHERE bowl_id = $1"#,
+        r#"SELECT * FROM waterlevels WHERE id = $1"#,
         waterlevel_id.id
     )
     .fetch_one(&self.db)
@@ -271,7 +270,7 @@ pub fn read_db_waterlevel_by_id(
 }
 
 #[capability(Read, Waterlevel)]
-pub fn get_db_waterlevel(waterlevel: Waterlevel) -> Result<Waterlevel, CapServiceError> {
+pub fn read_db_waterlevel(waterlevel: Waterlevel) -> Result<Waterlevel, CapServiceError> {
     let bowl = sqlx::query_as!(
         Waterlevel,
         r#"SELECT * FROM waterlevels WHERE id = $1"#,
