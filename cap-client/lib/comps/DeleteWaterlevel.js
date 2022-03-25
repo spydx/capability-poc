@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { useGnapContext } from "../GnapProvider";
 
-const ReadBowl = (bowl) => {
+const DeleteWaterlevel = (bowl) => {
 
     const [id, setId ] = useState("");
-    const {read_resourse_data, read_resource} = useGnapContext();
+    const {delete_resourse_data, delete_resource} = useGnapContext();
     
 
     const btn = "bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 border border-gray-400 rounded shadow"
@@ -24,16 +24,16 @@ const ReadBowl = (bowl) => {
                     onClick={ () => {
                         if (id != "") {
                             console.log("clicky bitch")
-                            read_resource(id)
+                            delete_resource(id)
                         }
                     }}
-                >Read</button>
+                >Delete</button>
             </div>
             <div>
-                { read_resourse_data == null ? <div></div> : <div>{read_resourse_data.id} : {read_resourse_data.name}</div>}
+                { delete_resourse_data == null ? <div></div> : <div>{delete_resourse_data.status}</div>}
             </div>
         </div>
     </>);
 }
 
-export default ReadBowl;
+export default DeleteWaterlevel;

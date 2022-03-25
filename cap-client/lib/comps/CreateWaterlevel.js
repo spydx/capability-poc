@@ -1,10 +1,11 @@
 import { useState } from "react"
 import { useGnapContext } from "../GnapProvider";
 
-const ReadBowl = (bowl) => {
+const CreateWaterlevel = (bowl) => {
 
     const [id, setId ] = useState("");
-    const {read_resourse_data, read_resource} = useGnapContext();
+    const [waterlevel, setWaterlevel] = useState();
+    const {delete_resourse_data, delete_resource} = useGnapContext();
     
 
     const btn = "bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 border border-gray-400 rounded shadow"
@@ -12,28 +13,34 @@ const ReadBowl = (bowl) => {
     return (<>
         <div>
             <div className='flex flex-col item-center'>
-                <p>Bowl ID</p>
+                <p>Create Waterlevel</p>
                 <input 
                     type="text"
                     className="py-2 px-4"
                     value={id}
                     onChange={(e) => setId(e.target.value)}
-                    placeholder="Bowl ID (integer)" 
+                    placeholder="Bowl (integer)" 
+                    />
+                <input 
+                    type="text"
+                    className="py-2 px-4"
+                    value={id}
+                    onChange={(e) => setWaterlevel(e.target.value)}
+                    placeholder="Waterlevel (integer)" 
                     />
                 <button className={btn}
                     onClick={ () => {
                         if (id != "") {
                             console.log("clicky bitch")
-                            read_resource(id)
                         }
                     }}
-                >Read</button>
+                >Create</button>
             </div>
             <div>
-                { read_resourse_data == null ? <div></div> : <div>{read_resourse_data.id} : {read_resourse_data.name}</div>}
+                
             </div>
         </div>
     </>);
 }
 
-export default ReadBowl;
+export default CreateWaterlevel;

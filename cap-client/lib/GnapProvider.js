@@ -17,7 +17,13 @@ const GnapContext = createContext({
     showRead: false,
     setShowRead: async () => {},
     gnapResponse: null,
-    read_resource: async () => {}
+    read_resource: async () => {},
+    read_resourse_data: null,
+    create_resourse_data: null,
+    setShowCreateWaterlevel : async () => {},
+    setShowReadWaterlevel: async () => {},
+    setShowUpdateWaterlevel: async () => {},
+    setShowDeleteWaterlevel: async () => {},
 });
 
 export default function GnapProvider({children}) {

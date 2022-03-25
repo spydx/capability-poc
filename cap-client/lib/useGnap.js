@@ -70,11 +70,25 @@ export default function useGnap() {
   const [gnapReadRequest, setGnapReadRequest] = useState(null);
   const [gnapDeleteRequest, setGnapDeleteRequest] = useState(null);
   const [gnapResponse, setGnapResponse] = useState(null);
-  const [accessTokenMap, setAccessTokenMap] = useState(null);
+  const [accessTokenMap, setAccessTokenMap] = useState(new Map());
   const [requestMap, setRequestMap] = useState(null);
-
+  const [read_resourse_data, setReadResourseData] = useState(null);
   const [showCreate, setShowCreate] = useState(false);
   const [showRead, setShowRead] = useState(false);
+ 
+  const [showUpdate, setShowUpdate] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
+
+  const [create_resourse_data, setCreateResourseData] = useState(null);
+  const [delete_resourse_data, setDeleteResourseData] = useState(null);
+
+
+  const [showCreateWaterlevel, setShowCreateWaterlevel ] = useState()
+  const [showReadWaterlevel, setShowReadWaterlevel ] = useState()
+  const [showUpdateWaterlevel, setShowUpdateWaterlevel ] = useState()
+  const [showDeleteWaterlevel, setShowDeleteWaterlevel ] = useState()
+
+  const [readWaterlevel, setReadWaterlevel] = useState();
 
   const redirectLogin = (value) => {
     if (value) {
@@ -244,7 +258,7 @@ export default function useGnap() {
       let url = requestMap.get("create_bowls");
       let token = accessTokenMap.get("create_bowls");
       let bowl = { "name": name };
-      await fetch(url,
+      let status = await fetch(url,
         {
           method: "POST",
           headers: {
@@ -253,8 +267,11 @@ export default function useGnap() {
           },
           body: JSON.stringify(bowl)
         }
-
-      )
+      ).then(res => res.json())
+      .then(d => d)
+      .catch((err) => console.log(err))
+      setCreateResourseData(status)
+      console.log(status)
     }
   }
 
@@ -276,11 +293,53 @@ export default function useGnap() {
         return res.json()})
       .then(d => d)
       .catch((err) => console.log(err))
-
+      setReadResourseData(data)
       console.log(data)
     }
   }
 
+  const delete_resource = async (id) => {
+    if (accessTokenMap != null && requestMap != null) {
+
+      let url = requestMap.get("delete_bowls");
+      let token = accessTokenMap.get("delete_bowls");
+      let data = await fetch(url + id,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-type": "application/json",
+            "Authorization": "Bearer " + token
+          }
+        }
+      ).then(res => {
+        console.log(res);
+        return res.json()})
+      .then(d => d)
+      .catch((err) => console.log(err))
+      setReadResourseData(data)
+      console.log(data)
+    }
+  }
+
+  const get_waterlevel_by_id = async (id) => {
+    if (accessTokenMap != null && requestMap != null) {
+      let url = requestMap.get("read_waterlevel")
+      let token = accessTokenMap.get("read_waterlevel")
+      let data = await fetch(url + id, 
+        {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+            "Authorization": "Bearer " + token
+          }
+        })
+        .then(res => res.json())
+        .then(d => d)
+        .catch(err => console.log(err))
+        setReadWaterlevel(data)
+    }
+  }
+  
 
   return {
     user,
@@ -304,5 +363,17 @@ export default function useGnap() {
     setShowRead,
     showRead,
     read_resource,
+    read_resourse_data, 
+    setReadResourseData,
+    create_resourse_data, setCreateResourseData,
+    showUpdate, setShowUpdate,
+    showDelete, setShowDelete,
+    delete_resourse_data, delete_resource,
+    showCreateWaterlevel, setShowCreateWaterlevel,
+    showReadWaterlevel, setShowReadWaterlevel,
+    showUpdateWaterlevel, setShowUpdateWaterlevel,
+    showDeleteWaterlevel, setShowDeleteWaterlevel,
+    readWaterlevel, setReadWaterlevel,
+    get_waterlevel_by_id
   }
 }

@@ -4,10 +4,16 @@ import { useGnapContext } from '../lib/GnapProvider';
 import Menu from '../lib/menu';
 import CreateBowl from '../lib/comps/CreateBowl';
 import ReadBowl from '../lib/comps/ReadBowl';
+import DeleteWaterlevel from '../lib/comps/DeleteWaterlevel';
+import CreateWaterlevel from '../lib/comps/CreateWaterlevel';
+import ReadWaterlevel from '../lib/comps/ReadWaterlevel';
 
 export default function Home() {
   const router = useRouter();
   const {tx, showRead,  setTransaction, showCreate, requestMap, accessTokenMap } = useGnapContext()
+  const { showCreateWaterlevel, setShowCreateWaterlevel } = useGnapContext()
+  const { showReadWaterlevel, setShowReadWaterlevel} = useGnapContext()
+  const { showDeleteWaterlevel, setShowDeleteWaterlevel } = useGnapContext()
 
   
   useEffect( () => {
@@ -70,6 +76,10 @@ export default function Home() {
               </div>
             { showCreate ? <CreateBowl /> : ""}
             { showRead ? <ReadBowl /> : ""}
+            { showCreateWaterlevel ? <CreateWaterlevel /> : ""}
+            { showReadWaterlevel ? <ReadWaterlevel /> : ""}
+            { showDeleteWaterlevel ? <DeleteWaterlevel /> : ""}
+          
             </div>
         </div>
     </>

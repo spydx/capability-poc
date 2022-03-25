@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { useGnapContext } from "../GnapProvider";
 
-const ReadBowl = (bowl) => {
+const ReadWaterlevel = (bowl) => {
 
     const [id, setId ] = useState("");
-    const {read_resourse_data, read_resource} = useGnapContext();
+    const {readWaterlevel, get_waterlevel_by_id} = useGnapContext();
     
 
     const btn = "bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 border border-gray-400 rounded shadow"
@@ -12,28 +12,28 @@ const ReadBowl = (bowl) => {
     return (<>
         <div>
             <div className='flex flex-col item-center'>
-                <p>Bowl ID</p>
+                <p>Waterlevel</p>
                 <input 
                     type="text"
                     className="py-2 px-4"
                     value={id}
                     onChange={(e) => setId(e.target.value)}
-                    placeholder="Bowl ID (integer)" 
+                    placeholder="Waterlevel Id (integer)" 
                     />
                 <button className={btn}
                     onClick={ () => {
                         if (id != "") {
                             console.log("clicky bitch")
-                            read_resource(id)
+                            get_waterlevel_by_id(id)
                         }
                     }}
                 >Read</button>
             </div>
             <div>
-                { read_resourse_data == null ? <div></div> : <div>{read_resourse_data.id} : {read_resourse_data.name}</div>}
+                { readWaterlevel == null ? <div></div> : <div>{readWaterlevel.id}</div>}
             </div>
         </div>
     </>);
 }
 
-export default ReadBowl;
+export default ReadWaterlevel;

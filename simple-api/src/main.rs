@@ -89,7 +89,7 @@ async fn main() -> Result<(), std::io::Error> {
             .service(get_bowl_by_id)
             .service(add_bowl_waterlevel)
             .service(get_all_bowl_waterlevels)
-            .service(delete_all_bowl_waterlevels)
+            .service(delete_bowl_waterlevels_by_id)
             .app_data(web::Data::new(service.clone()))
     })
     .bind(binding)?
@@ -184,7 +184,7 @@ pub async fn get_all_bowl_waterlevels(
 }
 
 #[delete("/waterlevels/{id}")]
-pub async fn delete_all_bowl_waterlevels(
+pub async fn delete_bowl_waterlevels_by_id(
     bowl_id: web::Path<String>,
     svc: web::Data<CapService>,
     cap: Capability) -> impl Responder {
