@@ -11,9 +11,9 @@ struct Person {
     lastname: String,
 }
 
-trait CreateRead<S> {
-    fn create(firstname: String, lastname: String) -> S;
-    fn read(id: i64) -> S;
+trait CreateRead<T> {
+    fn create(firstname: String, lastname: String) -> T;
+    fn read(id: i64) -> T;
 }
 
 impl CreateRead<Person> for Person {
