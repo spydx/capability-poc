@@ -2,7 +2,7 @@
 
 ## Update Queries
 
-IMPORTANT: this lib must not be apart of the workspace, or sqlx-cli will fail.
+IMPORTANT: this lib must not be a part of the workspace, or sqlx-cli will fail.
 
 ```zsh
 echo "DATABASE_URL=sqlite:test.db" >> .env
