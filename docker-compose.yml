@@ -1,28 +1,28 @@
 services:
-  #cap-client:
-  #  build:
-  #    context: .
-  #    dockerfile: dockerfiles/cap-client
-  #  ports:
-  #    - "3000:3000"
-  #simple-api:
-  #  build:
-  #    context: .
-  #    dockerfile: dockerfiles/simple-api
-  #  ports:
-  #    - "8080:8080"
-    #depends_on:
-    #  - as-api
-  #as-api:
-  #  build:
-  #    context: .
-  #    dockerfile: dockerfiles/gnap-as
-  #  ports: 
-  #    - "8000:8000"
-  #    - "9433:9433"
-  #  depends_on:
-  #    - redis-poc
-  #    - monogodb-poc
+  cap-client:
+    build:
+      context: .
+      dockerfile: dockerfiles/cap-client
+    ports:
+      - "3000:3000"
+  simple-api:
+    build:
+      context: .
+      dockerfile: dockerfiles/simple-api
+    ports:
+      - "8080:8080"
+    depends_on:
+       - as-api
+  as-api:
+    build:
+      context: .
+      dockerfile: dockerfiles/gnap-as
+    ports: 
+      - "8000:8000"
+      - "9433:9433"
+    depends_on:
+      - redis-poc
+      - monogodb-poc
   redis-poc:
     image: redis:alpine
     container_name: redis-poc
