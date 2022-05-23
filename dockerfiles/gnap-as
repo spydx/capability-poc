@@ -1,6 +1,7 @@
 FROM rust:1.58 as builder
 WORKDIR /usr/src/myapp
 COPY gnap/ .
+COPY .env .
 RUN cargo install --path gnap_as
 
 FROM debian:bookworm-slim
