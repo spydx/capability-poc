@@ -1,42 +1,58 @@
-# Capability PoC
+# Capability PoC - Instructions
 
 PS: remember to clone with `--recurse-submodules`
 
 ```sh
 git clone --recurse-submodules <repo>
-git submodule update --init --recursive # first time
-git submodule update --recursive --remote # other option
-git pull --recurse-submodules
+git submodule update --remote --recursive
 ```
 
-## Important setting
+## Running the example
 
-When using `cargo` and you are trying to fetch the lib repo from GitHub,
-you might get problems with your credentials.
-Workaround for this is to set this environmental variable:
+The recommended way to start this example is to use `docker-compose`.
+The build process will depend on your internet connection take anything from 15 min to 20+ min to build all the components.
+
+### Docker-compose
+
+After installing Docker:
+
+Bring everything up
 
 ```sh
-> export CARGO_NET_GIT_FETCH_WITH_CLI=true
+> docker-compise build # approx 15+ min
+> docker-compose up 
 ```
 
-This will make you able to run the following commands without problems:
+Launch a browser and access http://localhost:3000/
 
-```sh
-> cargo update
-> cargo check / clippy / build # only the first time
-```
+The process to be done is:
 
-## To run any of these samples
+- 1. GnapRequest
+- 2. Login at the AS
+- 3. Continuation Request (Authorization)
+
+- One or more of the desired actions.
+
+## Users
+
+| Username | Password |
+|---|---|
+| kenneth | password |
+| alice | password |
+| bob | password |
+
 
 ### Manually
 
-You need:
+You will need:
 
 - Rust/Cargo : [install](https://www.rust-lang.org/tools/install)
 - SQLx-cli : `cargo install sqlx-cli` [install](https://lib.rs/crates/sqlx-cli)
 - sqlx needs SQLite support, so either specify or leave for default.
+- npm for nextjs.
+- Add `host.docker.internal` pointing to `127.0.0.1` to in the local hosts file.
 
-### Ubuntu
+### Ubuntu / Linux
 
 You will need:
 
@@ -48,29 +64,34 @@ rustup toolchain install nightly # do this if cargo doesn't do it automatically
 cargo check # after all above, this should work from the project root.
 ```
 
-### Docker
+### Building order
 
-After installing Docker, from root:
-
-```sh
-> docker build . --file dockerfiles/single-api -t single-api
-> docker run -p 8080:8080 --name single-api single-api
-```
-
-### Docker-compose
-
-After installing Docker:
-
-Bring everything up
+1. GNAP
 
 ```sh
-> docker-compose up
+> cd gnap
+> docker-compose up -d # bring up REDIS and MongoDB.
+> cd gnap_as
+> cargo run 
 ```
 
-Just simple-api
+2. simple-api
+```sh
+> cd simple-api
+> cargo run
+```
+
+3. cap-client
 
 ```sh
-> docker-compose up simple-api
+> cd cap-client
+> npm install
+> npm run dev
+> open http://localhost:3000/
 ```
 
+## Database errors
 
+Sometimes the Mongo database stops working correctly.
+If it does, then removing the data in the folder `./gnap/data/mongodb`
+will cause a rebuild of the database to the clean working state with `docker-compose up`.
