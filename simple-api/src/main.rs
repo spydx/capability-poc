@@ -13,7 +13,8 @@ use chrono::{serde::ts_seconds, NaiveDateTime, TimeZone, Utc};
 use gnap_cli::GnapClient;
 use serde::Serializer;
 use serde::{Deserialize, Serialize};
-
+use std::env;
+use log::debug;
 /*
     DTO - Data Transfere Objects
     Insecure by default
@@ -74,7 +75,11 @@ async fn main() -> Result<(), std::io::Error> {
         .expect("Failed to run sql mig on database");
 
     let rs_ref = "e8a2968a-f183-45a3-b63d-4bbbd1dad276".to_string();
-    let basepath = "http://localhost:8000/gnap".to_string();
+    let basepath = match env::var("DOCKER") {
+        Ok(_) => "http://as-api:8000/gnap".to_string(),
+        _ => "http://localhost:8000/gnap".to_string(),
+    };
+    debug!("BasePath: {:#?}", basepath);
     let gnap_client = GnapClient::build(basepath, rs_ref);
 
     let bearer_auth = HttpAuthentication::bearer(token_introspection);

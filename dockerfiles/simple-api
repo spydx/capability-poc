@@ -1,5 +1,6 @@
 FROM rust:1.58 as builder
 WORKDIR /usr/src/myapp
+ENV DOCKER ""
 COPY capabilities /usr/src/capabilities
 COPY gnap-cli /usr/src/gnap-cli
 COPY simple-api .
@@ -9,6 +10,7 @@ FROM debian:bookworm-slim
 RUN apt-get update && apt-get install ca-certificates openssl -y && rm -rf /var/lib/apt/lists/*
 RUN update-ca-certificates
 WORKDIR /usr/local/bin/
+ENV DOCKER ""
 COPY --from=builder /usr/src/myapp/test.db* .
 COPY --from=builder /usr/local/cargo/bin/simple_api ./simple-api
 EXPOSE 8080

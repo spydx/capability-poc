@@ -1,14 +1,14 @@
 FROM rust:1.58 as builder
 WORKDIR /usr/src/myapp
+COPY .env env
 COPY gnap/ .
-COPY .env .
 RUN cargo install --path gnap_as
 
 FROM debian:bookworm-slim
 RUN apt-get update && apt-get install ca-certificates openssl -y && rm -rf /var/lib/apt/lists/*
 RUN update-ca-certificates
 WORKDIR /usr/local/bin/
-COPY --from=builder /usr/src/myapp/gnap_as/.env .
+COPY --from=builder /usr/src/myapp/gnap_as/env ./.env
 COPY --from=builder /usr/src/myapp/gnap_as/.keystore .
 COPY --from=builder /usr/src/myapp/gnap_as/static ./static
 COPY --from=builder /usr/local/cargo/bin/gnap_as ./gnap-as
