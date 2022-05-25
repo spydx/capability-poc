@@ -1,9 +1,6 @@
 [submodule "capabilities"]
 	path = capabilities
 	url = https://github.com/spydx/capabilities.git
-[submodule "gnap"]
-	path = gnap
-	url = https://github.com/spydx/gnap
 [submodule "capabilityapi"]
 	path = capabilityapi
 	url = https://github.com/spydx/capabilityapi
