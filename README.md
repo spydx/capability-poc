@@ -3,7 +3,8 @@
 PS: remember to clone with `--recurse-submodules`
 
 ```sh
-git clone --recurse-submodules <repo>
+git clone --recurse-submodules https://github.com/spydx/capability-poc.git
+cd capability-poc
 git submodule update --remote --recursive
 ```
 
@@ -37,10 +38,9 @@ The process to be done is:
 
 | Username | Password |
 |---|---|
-| kenneth | password |
-| alice | password |
-| bob | password |
-
+| kenneth | password |
+| alice | password |
+| bob | password |
 
 ### Manually
 
