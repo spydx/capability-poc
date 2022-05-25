@@ -1,4 +1,4 @@
-FROM rust:1.58 as builder
+FROM rust:1.61 as builder
 WORKDIR /usr/src/myapp
 ENV DOCKER ""
 COPY capabilities /usr/src/capabilities
