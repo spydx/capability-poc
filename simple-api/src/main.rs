@@ -15,6 +15,8 @@ use serde::Serializer;
 use serde::{Deserialize, Serialize};
 use std::env;
 use log::debug;
+use actix_cors::Cors;
+
 /*
     DTO - Data Transfere Objects
     Insecure by default
@@ -88,6 +90,7 @@ async fn main() -> Result<(), std::io::Error> {
             .app_data(gnap_client.clone())
             .wrap(bearer_auth.clone())
             .wrap(Logger::default())
+            .wrap(Cors::permissive())
             .service(create_new_bowl)
             .service(get_bowl_by_id)
             .service(add_bowl_waterlevel)
