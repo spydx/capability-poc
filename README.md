@@ -95,3 +95,17 @@ cargo check # after all above, this should work from the project root.
 Sometimes the Mongo database stops working correctly.
 If it does, then removing the data in the folder `./gnap/data/mongodb`
 will cause a rebuild of the database to the clean working state with `docker-compose up`.
+
+
+## BibTex
+
+```bibtex
+@software{Fossen_Exploring_Capability-based_security_2022,
+    author = {Fossen, Kenneth},
+    month = {6},
+    title = {{Exploring Capability-based security in software design with Rust}},
+    url = {https://github.com/spydx/capability-poc},
+    version = {1.0.0},
+    year = {2022}
+}
+```
