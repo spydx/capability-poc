@@ -6,7 +6,7 @@ COPY gnap-cli /usr/src/gnap-cli
 COPY simple-api .
 RUN cargo install --path .
 
-FROM debian:bookworm-slim
+FROM debian:bookworm-20220418-slim
 RUN apt-get update && apt-get install ca-certificates openssl -y && rm -rf /var/lib/apt/lists/*
 RUN update-ca-certificates
 WORKDIR /usr/local/bin/
